@@ -37,6 +37,5 @@ class Break(models.Model):
                 code=BREAK_CREATED_STATUS,
                 defaults=BREAK_CREATED_DEFAULT
             )
-
             self.status = status
         return super(Break, self).save(*args, **kwargs)

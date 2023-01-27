@@ -41,7 +41,9 @@ INSTALLED_APPS += [
     'breaks',
 ]
 
+# Custom user model
 AUTH_USER_MODEL = 'users.User'
+# Custom backend
 AUTHENTICATION_BACKENDS = ('users.backends.AuthBackend',)
 
 # after apps
@@ -166,7 +168,7 @@ CSRF_COOKIE_SECURE = False
 ######################
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Call Helper',
-        'DESCRIPTION': 'Your project description',
+        'DESCRIPTION': 'Call Helper',
     'VERSION': '1.0.0',
 
     'SERVE_PERMISSIONS': [
@@ -174,8 +176,8 @@ SPECTACULAR_SETTINGS = {
     ],
 
     'SERVE_AUTHENTICATION': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+
     ],
 
     'SWAGGER_UI_SETTINGS': {

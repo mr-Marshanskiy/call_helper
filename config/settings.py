@@ -39,6 +39,7 @@ INSTALLED_APPS += [
     'common',
     'users',
     'breaks',
+    'organisations',
 ]
 
 # Custom user model

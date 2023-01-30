@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
 
-from breaks.models import organisations, groups, replacements, dicts, breaks
+from breaks.models import replacements, dicts, breaks
 
 
 ##############################
@@ -18,30 +17,6 @@ class ReplacementEmployeeInline(TabularInline):
 ##############################
 # MODELS
 ##############################
-@admin.register(organisations.Organisation)
-class OrganisationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'director',)
-    filter_vertical = ('employees',)
-
-
-@admin.register(groups.Group)
-class GroupAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'manager', 'min_active', 'replacement_count',)
-    list_display_links = ('id', 'name',)
-    search_fields = ('name',)
-
-    def replacement_count(self, obj):
-        return obj.replacement_count
-
-    replacement_count.short_description = 'Кол-во смен'
-
-    def get_queryset(self, request):
-        queryset = groups.Group.objects.annotate(
-            replacement_count=Count('replacements__id')
-        )
-        return queryset
-
-
 @admin.register(dicts.ReplacementStatus)
 class ReplacementStatusAdmin(admin.ModelAdmin):
     list_display = (
@@ -61,7 +36,6 @@ class ReplacementAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'group', 'date', 'break_start', 'break_end', 'break_max_duration',
     )
-    autocomplete_fields = ('group',)
     inlines = (
         ReplacementEmployeeInline,
     )

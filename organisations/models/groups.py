@@ -2,10 +2,12 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
+from common.models.mixins import InfoMixin
+
 User = get_user_model()
 
 
-class Group(models.Model):
+class Group(InfoMixin):
     organisation = models.ForeignKey(
         'Organisation', models.RESTRICT, 'groups',
         verbose_name='Организация',
@@ -18,14 +20,6 @@ class Group(models.Model):
     members = models.ManyToManyField(
         User, 'groups_members', verbose_name='Участники группы',
         blank=True, through='Member',
-    )
-    min_active = models.PositiveSmallIntegerField(
-        'Минимальное количество активных сотрудников', null=True, blank=True,
-    )
-    break_start = models.TimeField('Начало обеда', null=True, blank=True,)
-    break_end = models.TimeField('Конец обеда', null=True, blank=True,)
-    break_max_duration = models.PositiveSmallIntegerField(
-        'Максимальная длительность обеда', null=True, blank=True,
     )
 
     class Meta:

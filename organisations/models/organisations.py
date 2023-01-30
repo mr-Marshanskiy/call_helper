@@ -3,10 +3,12 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
+from common.models.mixins import InfoMixin
+
 User = get_user_model()
 
 
-class Organisation(models.Model):
+class Organisation(InfoMixin):
     name = models.CharField('Название', max_length=255)
     director = models.ForeignKey(
         User, models.RESTRICT, 'organisations_directors',
@@ -43,7 +45,6 @@ class Employee(models.Model):
         verbose_name_plural = 'Сотрудники организаций'
         ordering = ('-date_joined',)
         unique_together = (('organisation', 'user'),)
-
 
     def __str__(self):
         return f'Employee {self.user}'

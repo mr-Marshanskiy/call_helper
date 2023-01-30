@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from breaks.models import replacements, dicts, breaks
+from breaks.models.replacements import GroupInfo
 
 
 ##############################
@@ -17,6 +18,13 @@ class ReplacementEmployeeInline(TabularInline):
 ##############################
 # MODELS
 ##############################
+@admin.register(GroupInfo)
+class GroupInfoAdmin(admin.ModelAdmin):
+    list_display = (
+        'group', 'break_start', 'break_end',
+    )
+
+
 @admin.register(dicts.ReplacementStatus)
 class ReplacementStatusAdmin(admin.ModelAdmin):
     list_display = (

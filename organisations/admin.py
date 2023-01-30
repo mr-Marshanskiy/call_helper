@@ -31,7 +31,7 @@ class ProfileBreakInline(admin.StackedInline):
 # MODELS
 ##############################
 @admin.register(dicts.Position)
-class ReplacementStatusAdmin(admin.ModelAdmin):
+class PositionAdmin(admin.ModelAdmin):
     list_display = (
         'code', 'name', 'sort', 'is_active',
     )
@@ -42,14 +42,20 @@ class OrganisationAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'director',)
     filter_vertical = ('employees',)
     inlines = (EmployeeInline,)
+    readonly_fields = (
+        'created_at', 'created_by', 'updated_at', 'updated_by',
+    )
 
 
 @admin.register(groups.Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'manager', 'min_active',)
+    list_display = ('id', 'name', 'manager', )
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     inlines = (
         MemberInline,
         ProfileBreakInline,
+    )
+    readonly_fields = (
+        'created_at', 'created_by', 'updated_at', 'updated_by',
     )

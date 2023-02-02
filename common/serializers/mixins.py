@@ -9,3 +9,5 @@ class ExtendedModelSerializer(serializers.ModelSerializer):
 class DictMixinSerializer(serializers.Serializer):
     code = serializers.CharField()
     name = serializers.CharField()
+
+

@@ -22,7 +22,7 @@ class Organisation(InfoMixin):
     class Meta:
         verbose_name = 'Организация'
         verbose_name_plural = 'Организации'
-        ordering = ('name',)
+        ordering = ('name', 'id',)
 
     def __str__(self):
         return f'{self.name} ({self.pk})'

@@ -7,8 +7,8 @@ router = DefaultRouter()
 
 router.register(r'dicts/positions', dicts.PositionView, 'positions')
 router.register(r'search', organisations.OrganisationSearchView, 'organisations-search')
-router.register(r'manage', organisations.OrganisationView, 'organisations')
-router.register(r'manage/(?P<pk>\d+)/employees', employees.EmployeeView, 'employees')
+router.register(r'(?P<pk>\d+)/employees', employees.EmployeeView, 'employees')
+router.register(r'', organisations.OrganisationView, 'organisations')
 
 urlpatterns = [
     path('organisations/', include(router.urls)),

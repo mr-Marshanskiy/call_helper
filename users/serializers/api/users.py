@@ -1,3 +1,5 @@
+import pdb
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction
@@ -110,8 +112,9 @@ class MeUpdateSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             instance = super().update(instance, validated_data)
 
-            # Update профиля
-            self._update_profile(instance.profile, profile_data)
+            # # Update профиля
+            if profile_data:
+                self._update_profile(instance.profile, profile_data)
 
         return instance
 
@@ -121,3 +124,14 @@ class MeUpdateSerializer(serializers.ModelSerializer):
         )
         profile_serializer.is_valid(raise_exception=True)
         profile_serializer.save()
+
+
+class UserSearchListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'full_name',
+        )

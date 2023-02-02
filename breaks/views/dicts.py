@@ -8,11 +8,11 @@ from breaks.models.dicts import ReplacementStatus, BreakStatus
     list=extend_schema(summary='Список статусов смен', tags=['Словари']),
 )
 class ReplacementStatusView(DictListMixin):
-    queryset = ReplacementStatus.objects.filter(is_active=True)
+    model = ReplacementStatus
 
 
 @extend_schema_view(
     list=extend_schema(summary='Список статусов обеденных перерывов', tags=['Словари']),
 )
 class BreakStatusView(DictListMixin):
-    queryset = BreakStatus.objects.filter(is_active=True)
+    model = BreakStatus

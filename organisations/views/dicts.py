@@ -8,4 +8,4 @@ from organisations.models.dicts import Position
     list=extend_schema(summary='Список должностей', tags=['Словари']),
 )
 class PositionView(DictListMixin):
-    queryset = Position.objects.filter(is_active=True)
+    model = Position

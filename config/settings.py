@@ -185,12 +185,21 @@ SPECTACULAR_SETTINGS = {
     ],
 
     'SWAGGER_UI_SETTINGS': {
-        'DeepLinking': True,
-        'DisplayOperationId': True,
+        'deepLinking': True,
+        "displayOperationId": True,
+        "syntaxHighlight.active": True,
+        "syntaxHighlight.theme": "arta",
+        "defaultModelsExpandDepth": -1,
+        "displayRequestDuration": True,
+        "filter": True,
+        "requestSnippetsEnabled": True,
     },
 
     'COMPONENT_SPLIT_REQUEST': True,
     'SORT_OPERATIONS': False,
+
+    'ENABLE_DJANGO_DEPLOY_CHECK': False,
+    'DISABLE_ERRORS_AND_WARNINGS': True,
 }
 
 #######################

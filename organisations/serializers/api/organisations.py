@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
 
-from common.serializers.mixins import ExtendedModelSerializer
+from common.serializers.mixins import ExtendedModelSerializer, \
+    InfoModelSerializer
 from organisations.models.organisations import Organisation
 from users.serializers.nested.users import UserShortSerializer
 
@@ -20,20 +22,42 @@ class OrganisationSearchListSerializer(ExtendedModelSerializer):
         )
 
 
-class OrganisationListSerializer(ExtendedModelSerializer):
+class OrganisationListSerializer(InfoModelSerializer):
     director = UserShortSerializer()
+    pax = serializers.IntegerField()
+    groups_count = serializers.IntegerField()
+    can_manage = serializers.BooleanField()
 
     class Meta:
         model = Organisation
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'director',
+            'pax',
+            'groups_count',
+            'created_at',
+            'can_manage',
+        )
 
 
-class OrganisationRetrieveSerializer(ExtendedModelSerializer):
+class OrganisationRetrieveSerializer(InfoModelSerializer):
     director = UserShortSerializer()
+    pax = serializers.IntegerField()
+    groups_count = serializers.IntegerField()
+    can_manage = serializers.BooleanField()
 
     class Meta:
         model = Organisation
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'director',
+            'pax',
+            'groups_count',
+            'created_at',
+            'can_manage',
+        )
 
 
 class OrganisationCreateSerializer(ExtendedModelSerializer):

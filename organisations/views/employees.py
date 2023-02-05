@@ -1,9 +1,13 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from common.views.mixins import CRUDViewSet
 from organisations.backends import OwnedByOrganisation
+from organisations.filters import EmployeeFilter
 from organisations.models.organisations import Employee
+from organisations.permissions import IsColleagues
 from organisations.serializers.api import employees as employees_s
+from users import permissions
 
 
 @extend_schema_view(
@@ -18,6 +22,8 @@ class EmployeeView(CRUDViewSet):
     queryset = Employee.objects.all()
     serializer_class = employees_s.EmployeeListSerializer
 
+    permission_classes = [IsColleagues]
+
     multi_serializer_class = {
         'list': employees_s.EmployeeListSerializer,
         'retrieve': employees_s.EmployeeRetrieveSerializer,
@@ -27,9 +33,21 @@ class EmployeeView(CRUDViewSet):
     }
 
     lookup_url_kwarg = 'employee_id'
+    http_method_names = ('get', 'post', 'patch', 'delete',)
 
     filter_backends = (
+        OrderingFilter,
+        SearchFilter,
         OwnedByOrganisation,
     )
+    filterset_class = EmployeeFilter
+    ordering = ('position', 'date_joined', 'id',)
 
-
+    def get_queryset(self):
+        qs = Employee.objects.select_related(
+            'user',
+            'position',
+        ).prefetch_related(
+            'organisation',
+        )
+        return qs

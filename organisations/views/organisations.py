@@ -7,7 +7,7 @@ from common.views.mixins import ListViewSet, CRUViewSet
 from organisations.backends import MyOrganisation
 from organisations.filters import OrganisationFilter
 from organisations.models.organisations import Organisation
-from organisations.permissions import IsOwner
+from organisations.permissions import IsMyOrganisation
 from organisations.serializers.api import organisations
 
 
@@ -27,13 +27,10 @@ class OrganisationSearchView(ListViewSet):
     partial_update=extend_schema(summary='Изменить организацию частично', tags=['Организации']),
 )
 class OrganisationView(CRUViewSet):
+    permission_classes = [IsMyOrganisation]
     queryset = Organisation.objects.all()
     serializer_class = organisations.OrganisationListSerializer
 
-    multi_permission_classes = {
-        'update': [IsOwner],
-        'partial_update': [IsOwner]
-    }
     multi_serializer_class = {
         'list': organisations.OrganisationListSerializer,
         'retrieve': organisations.OrganisationRetrieveSerializer,
@@ -42,13 +39,14 @@ class OrganisationView(CRUViewSet):
         'partial_update': organisations.OrganisationUpdateSerializer,
     }
 
-    filter_backends = [
+    http_method_names = ('get', 'post', 'patch')
+
+    filter_backends = (
         OrderingFilter,
         SearchFilter,
         DjangoFilterBackend,
         MyOrganisation,
-    ]
-    http_method_names = ['get', 'post', 'patch']
+    )
     search_fields = ('name',)
     filterset_class = OrganisationFilter
     ordering = ('name', 'id',)
@@ -63,7 +61,7 @@ class OrganisationView(CRUViewSet):
             pax=Count('employees', distinct=True),
             groups_count=Count('groups', distinct=True),
             can_manage=Case(
-                When(created_by=self.request.user, then=True),
+                When(director=self.request.user, then=True),
                 default=False,
             )
         )

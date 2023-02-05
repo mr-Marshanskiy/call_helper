@@ -13,3 +13,17 @@ class UserShortSerializer(serializers.ModelSerializer):
             'username',
             'full_name',
         )
+
+
+class UserEmployeeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'full_name',
+            'email',
+            'phone_number',
+            'is_corporate_account',
+        )

@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from common.models.mixins import InfoMixin
+from organisations.cinstants import DIRECTOR_POSITION
 
 User = get_user_model()
 
@@ -26,6 +27,13 @@ class Organisation(InfoMixin):
 
     def __str__(self):
         return f'{self.name} ({self.pk})'
+
+    @property
+    def director_employee(self):
+        obj, create = self.employees_info.get_or_create(
+            position_id=DIRECTOR_POSITION, defaults={'user': self.director, }
+        )
+        return obj
 
 
 class Employee(models.Model):

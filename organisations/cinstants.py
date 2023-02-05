@@ -1,0 +1,3 @@
+DIRECTOR_POSITION = 'director'
+MANAGER_POSITION = 'manager'
+OPERATOR_POSITION = 'operator'

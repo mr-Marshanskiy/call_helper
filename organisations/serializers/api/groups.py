@@ -51,17 +51,30 @@ class GroupCreateSerializer(ExtendedModelSerializer):
         fields = (
             'id',
             'organisation',
+            'manager',
             'name',
             'members_info',
         )
+        extra_kwargs = {
+            'members_info': {'required': False, },
+        }
 
     def validate_organisation(self, value):
         user = get_current_user()
         if value not in Organisation.objects.filter(director=user,):
             return ParseError(
-                'Организация выбрана ошибочно.'
+                'Неверно выбрана организация.'
             )
         return value
+
+    def validate(self, attrs):
+        org = attrs['organisation']
+        manager = attrs.get('manager') or org.director_employee
+        if manager not in org.employees.all():
+            raise ParseError(
+                'Администратором может быть только сотрудник организации или руководитель.'
+            )
+        return attrs
 
 
 class GroupUpdateSerializer(ExtendedModelSerializer):

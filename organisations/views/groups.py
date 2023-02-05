@@ -55,14 +55,14 @@ class GroupView(CRUViewSet):
             pax=Count('members', distinct=True),
             can_manage=Case(
                 When(
-                    Q(manager=self.request.user) |
+                    Q(manager__user=self.request.user) |
                     Q(organisation__director=self.request.user),
                     then=True
                 ),
                 default=False,
             ),
             is_member=Case(
-                When(Q(members=self.request.user)),
+                When(Q(members_info__employee__user=self.request.user)),
                 default=False,
             ),
         )

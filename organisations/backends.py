@@ -20,5 +20,5 @@ class MyGroup(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         user = request.user
         return queryset.filter(
-            Q(oganisation__director=user) | Q(oganisation__employees=user)
+            Q(organisation__director=user) | Q(organisation__employees=user)
         )

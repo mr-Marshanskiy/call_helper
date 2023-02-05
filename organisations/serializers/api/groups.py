@@ -53,10 +53,9 @@ class GroupCreateSerializer(ExtendedModelSerializer):
             'organisation',
             'manager',
             'name',
-            'members_info',
         )
         extra_kwargs = {
-            'members_info': {'required': False, },
+            'manager': {'required': False, 'allow_null': True, },
         }
 
     def validate_organisation(self, value):
@@ -65,14 +64,27 @@ class GroupCreateSerializer(ExtendedModelSerializer):
             return ParseError(
                 'Неверно выбрана организация.'
             )
+        print(self.fields)
         return value
 
     def validate(self, attrs):
         org = attrs['organisation']
-        manager = attrs.get('manager') or org.director_employee
-        if manager not in org.employees.all():
+
+        # Specified manager or organisation director
+        attrs['manager'] = attrs.get('manager') or org.director_employee
+        manager = attrs['manager']
+        # Check manager
+        if manager not in org.employees_info.all():
             raise ParseError(
                 'Администратором может быть только сотрудник организации или руководитель.'
+            )
+
+        # Check name duplicate
+        if self.Meta.model.objects.filter(
+                organisation=org, name=attrs['name']
+        ).exists():
+            raise ParseError(
+                'Группа с таким названием уже существует.'
             )
         return attrs
 
@@ -86,3 +98,11 @@ class GroupUpdateSerializer(ExtendedModelSerializer):
             'name',
             'members',
         )
+
+    def validate(self, attrs):
+        # Check name duplicate
+        if self.instance.organisation.groups.filter(name=attrs['name']).exists():
+            raise ParseError(
+                'Группа с таким названием уже существует.'
+            )
+        return attrs

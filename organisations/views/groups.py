@@ -4,10 +4,10 @@ from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from common.views.mixins import CRUViewSet
-from organisations.backends import MyOrganisation
+from organisations.backends import MyOrganisation, MyGroup
 from organisations.filters import GroupFilter
 from organisations.models.groups import Group
-from organisations.permissions import IsColleagues
+from organisations.permissions import IsColleagues, IsMyGroup
 from organisations.serializers.api import groups as groups_s
 
 
@@ -19,7 +19,7 @@ from organisations.serializers.api import groups as groups_s
     partial_update=extend_schema(summary='Изменить группу частично', tags=['Организации: Группы']),
 )
 class GroupView(CRUViewSet):
-    permission_classes = [IsColleagues]
+    permission_classes = [IsMyGroup]
 
     queryset = Group.objects.all()
     serializer_class = groups_s.GroupListSerializer
@@ -32,13 +32,13 @@ class GroupView(CRUViewSet):
         'partial_update': groups_s.GroupUpdateSerializer,
     }
 
-    http_method_names = ('get', 'post', 'patch', 'delete')
+    http_method_names = ('get', 'post', 'patch')
 
     filter_backends = (
         OrderingFilter,
         SearchFilter,
         DjangoFilterBackend,
-        MyOrganisation,
+        MyGroup,
     )
     search_fields = ('name',)
     filterset_class = GroupFilter
@@ -60,6 +60,10 @@ class GroupView(CRUViewSet):
                     then=True
                 ),
                 default=False,
-            )
+            ),
+            is_member=Case(
+                When(Q(members=self.request.user)),
+                default=False,
+            ),
         )
         return queryset

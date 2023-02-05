@@ -5,6 +5,7 @@ class IsMyOrganisation(BasePermission):
     def has_object_permission(self, request, view, obj):
         if obj.director == request.user:
             return True
+
         if request.method not in SAFE_METHODS:
             return obj.employees == request.user
 
@@ -25,7 +26,7 @@ class IsMyGroup(BasePermission):
     def has_object_permission(self, request, view, obj):
         if obj.director == request.user:
             return True
+
         if request.method not in SAFE_METHODS:
             return obj.employees == request.user
-
         return False

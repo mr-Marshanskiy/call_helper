@@ -7,7 +7,7 @@ class IsMyOrganisation(BasePermission):
             return True
 
         if request.method not in SAFE_METHODS:
-            return obj.employees == request.user
+            return obj.employees.all(user=request.user).exists()
 
         return False
 
@@ -18,15 +18,15 @@ class IsColleagues(BasePermission):
             return True
 
         if request.method in SAFE_METHODS:
-            return request.user in obj.organisation.employees
+            return obj.organisation.employees.all(user=request.user).exists()
         return False
 
 
 class IsMyGroup(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if obj.director == request.user:
+        if obj.organisation.director == request.user:
             return True
 
         if request.method not in SAFE_METHODS:
-            return obj.employees == request.user
+            return obj.organisation.employees.all(user=request.user).exists()
         return False

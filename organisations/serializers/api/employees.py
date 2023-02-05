@@ -1,5 +1,3 @@
-from turtle import position
-
 from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -9,8 +7,7 @@ from rest_framework.exceptions import ParseError
 from common.serializers.mixins import ExtendedModelSerializer
 from organisations.models.organisations import Employee, Organisation
 from organisations.serializers.nested.dicts import PositionShortSerializer
-from users.serializers.nested.users import UserShortSerializer, \
-    UserEmployeeSerializer
+from users.serializers.nested.users import UserEmployeeSerializer
 
 User = get_user_model()
 

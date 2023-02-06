@@ -47,7 +47,6 @@ class OrganisationView(CRUViewSet):
         DjangoFilterBackend,
         MyOrganisation,
     )
-    search_fields = ('name',)
     filterset_class = OrganisationFilter
     ordering = ('name', 'id',)
 

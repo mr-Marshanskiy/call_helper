@@ -62,7 +62,7 @@ class GroupView(CRUViewSet):
                 default=False,
             ),
             is_member=Case(
-                When(Q(members_info__employee__user=self.request.user)),
+                When(Q(members_info__employee__user=self.request.user), then=True),
                 default=False,
             ),
         )

@@ -70,7 +70,6 @@ class GroupCreateSerializer(ExtendedModelSerializer):
             return ParseError(
                 'Неверно выбрана организация.'
             )
-        print(self.fields)
         return value
 
     def validate(self, attrs):

@@ -14,7 +14,7 @@ User = get_user_model()
 
 
 class GroupListSerializer(InfoModelSerializer):
-    group = OrganisationShortSerializer()
+    organisation = OrganisationShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -24,7 +24,7 @@ class GroupListSerializer(InfoModelSerializer):
         fields = (
             'id',
             'name',
-            'group',
+            'organisation',
             'pax',
             'created_at',
             'can_manage',
@@ -33,7 +33,7 @@ class GroupListSerializer(InfoModelSerializer):
 
 
 class GroupRetrieveSerializer(InfoModelSerializer):
-    group = OrganisationShortSerializer()
+    organisation = OrganisationShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -43,7 +43,7 @@ class GroupRetrieveSerializer(InfoModelSerializer):
         fields = (
             'id',
             'name',
-            'group',
+            'organisation',
             'pax',
             'created_at',
             'can_manage',

@@ -73,7 +73,7 @@ class OfferOrgToUserCreateSerializer(ExtendedModelSerializer):
         # check user in org already
         users_in_orgs = organisation.employees_info.filter(user__in=users)
         if users_in_orgs:
-            user_error = '\n'.join([user.full_name for user in users_in_orgs])
+            user_error = '\n'.join([employee.user.full_name for employee in users_in_orgs])
             raise ParseError(
                 f'Следующие пользователи уже в Вашей компании:\n'
                 f'{user_error}'

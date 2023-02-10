@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from breaks.models.replacements import GroupInfo
-from organisations.models import organisations, groups, dicts
+from organisations.models import organisations, groups, dicts, offers
 
 
 ##############################
@@ -10,6 +10,11 @@ from organisations.models import organisations, groups, dicts
 class EmployeeInline(admin.TabularInline):
     model = organisations.Employee
     fields = ('user', 'position', 'date_joined',)
+
+
+class OfferInline(admin.TabularInline):
+    model = offers.Offer
+    fields = ('org_accept', 'user', 'user_accept',)
 
 
 class MemberInline(admin.TabularInline):
@@ -41,7 +46,7 @@ class PositionAdmin(admin.ModelAdmin):
 class OrganisationAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'director',)
     filter_vertical = ('employees',)
-    inlines = (EmployeeInline,)
+    inlines = (EmployeeInline,OfferInline,)
     readonly_fields = (
         'created_at', 'created_by', 'updated_at', 'updated_by',
     )
@@ -56,6 +61,16 @@ class GroupAdmin(admin.ModelAdmin):
         MemberInline,
         ProfileBreakInline,
     )
+    readonly_fields = (
+        'created_at', 'created_by', 'updated_at', 'updated_by',
+    )
+
+
+@admin.register(offers.Offer)
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('id', 'organisation', 'org_accept', 'user', 'user_accept',)
+    search_fields = ('organisation__name', 'user__last_name',)
+
     readonly_fields = (
         'created_at', 'created_by', 'updated_at', 'updated_by',
     )

@@ -1,6 +1,7 @@
 import pdb
 
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import generics
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -68,5 +69,7 @@ class MeView(RetrieveUpdateAPIView):
 )
 class UserListSearchView(ListViewSet):
     # Убрать из списка суперюзеров
-    queryset = User.objects.all()
+    queryset = User.objects.exclude(
+        Q(is_superuser=True) | Q(is_corporate_account=True)
+    )
     serializer_class = user_s.UserSearchListSerializer

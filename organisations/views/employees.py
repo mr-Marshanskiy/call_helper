@@ -1,6 +1,6 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema_view, extend_schema
-from rest_framework.filters import SearchFilter, OrderingFilter, \
-    BaseFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from common.views.mixins import CRUDViewSet
 from organisations.backends import OwnedByOrganisation
@@ -36,7 +36,7 @@ class EmployeeView(CRUDViewSet):
     http_method_names = ('get', 'post', 'patch', 'delete',)
 
     filter_backends = (
-        BaseFilterBackend,
+        DjangoFilterBackend,
         OrderingFilter,
         SearchFilter,
         OwnedByOrganisation,

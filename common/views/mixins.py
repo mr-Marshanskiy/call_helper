@@ -96,3 +96,10 @@ class CRUDViewSet(CRUViewSet,
                   mixins.DestroyModelMixin,):
     pass
 
+
+class ListCreateUpdateViewSet(ExtendedGenericViewSet,
+                              mixins.ListModelMixin,
+                              mixins.CreateModelMixin,
+                              mixins.UpdateModelMixin,):
+    pass
+

@@ -30,3 +30,13 @@ class IsMyGroup(BasePermission):
         if request.method in SAFE_METHODS:
             return obj.organisation.employees.all(user=request.user).exists()
         return False
+
+
+class IsOfferManager(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if obj.organisation.director == request.user:
+            return True
+
+        if request.method in SAFE_METHODS:
+            return obj.organisation.employees.all(user=request.user).exists()
+        return False

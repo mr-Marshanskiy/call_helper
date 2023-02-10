@@ -90,7 +90,7 @@ class OfferOrgToUserCreateSerializer(ExtendedModelSerializer):
 
 
 class OfferOrgToUserUpdateSerializer(ExtendedModelSerializer):
-    accept = serializers.BooleanField()
+    accept = serializers.BooleanField(write_only=True)
 
     class Meta:
         model = Offer
@@ -186,7 +186,7 @@ class OfferUserToOrgCreateSerializer(ExtendedModelSerializer):
 
 
 class OfferUserToOrgUpdateSerializer(ExtendedModelSerializer):
-    accept = serializers.BooleanField()
+    accept = serializers.BooleanField(write_only=True)
 
     class Meta:
         model = Offer

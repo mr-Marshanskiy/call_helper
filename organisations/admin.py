@@ -9,7 +9,7 @@ from organisations.models import organisations, groups, dicts, offers
 ##############################
 class EmployeeInline(admin.TabularInline):
     model = organisations.Employee
-    fields = ('user', 'position', 'date_joined',)
+    fields = ('employee', 'position', 'date_joined',)
 
 
 class OfferInline(admin.TabularInline):
@@ -19,7 +19,7 @@ class OfferInline(admin.TabularInline):
 
 class MemberInline(admin.TabularInline):
     model = groups.Member
-    fields = ('user', 'date_joined',)
+    fields = ('employee', 'date_joined',)
 
 
 class ProfileBreakInline(admin.StackedInline):

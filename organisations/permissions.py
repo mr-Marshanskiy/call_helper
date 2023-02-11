@@ -7,7 +7,7 @@ class IsMyOrganisation(BasePermission):
             return True
 
         if request.method in SAFE_METHODS:
-            return obj.employees.all(user=request.user).exists()
+            return obj.employees.filter(user=request.user).exists()
 
         return False
 
@@ -18,7 +18,7 @@ class IsColleagues(BasePermission):
             return True
 
         if request.method in SAFE_METHODS:
-            return obj.organisation.employees.all(user=request.user).exists()
+            return obj.organisation.employees.filter(user=request.user).exists()
         return False
 
 
@@ -28,7 +28,7 @@ class IsMyGroup(BasePermission):
             return True
 
         if request.method in SAFE_METHODS:
-            return obj.organisation.employees.all(user=request.user).exists()
+            return obj.organisation.employees.filter(user=request.user).exists()
         return False
 
 

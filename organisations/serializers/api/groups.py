@@ -9,12 +9,14 @@ from organisations.models.groups import Group
 from organisations.models.organisations import Organisation
 from organisations.serializers.nested.organisations import \
     OrganisationShortSerializer
+from users.serializers.nested.users import UserShortSerializer
 
 User = get_user_model()
 
 
 class GroupListSerializer(InfoModelSerializer):
     organisation = OrganisationShortSerializer()
+    manager = UserShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -34,6 +36,7 @@ class GroupListSerializer(InfoModelSerializer):
 
 class GroupRetrieveSerializer(InfoModelSerializer):
     organisation = OrganisationShortSerializer()
+    manager = UserShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -44,6 +47,8 @@ class GroupRetrieveSerializer(InfoModelSerializer):
             'id',
             'name',
             'organisation',
+            'manager',
+            'manager',
             'pax',
             'created_at',
             'can_manage',

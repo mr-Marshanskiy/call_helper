@@ -26,6 +26,7 @@ class GroupListSerializer(InfoModelSerializer):
         fields = (
             'id',
             'name',
+            'manager',
             'organisation',
             'pax',
             'created_at',
@@ -47,7 +48,6 @@ class GroupRetrieveSerializer(InfoModelSerializer):
             'id',
             'name',
             'organisation',
-            'manager',
             'manager',
             'pax',
             'created_at',

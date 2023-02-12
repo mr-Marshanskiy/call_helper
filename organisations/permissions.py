@@ -1,7 +1,8 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission, SAFE_METHODS, \
+    IsAuthenticated
 
 
-class IsMyOrganisation(BasePermission):
+class IsMyOrganisation(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.director == request.user:
             return True
@@ -12,7 +13,7 @@ class IsMyOrganisation(BasePermission):
         return False
 
 
-class IsColleagues(BasePermission):
+class IsColleagues(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.organisation.director == request.user:
             return True
@@ -22,7 +23,7 @@ class IsColleagues(BasePermission):
         return False
 
 
-class IsMyGroup(BasePermission):
+class IsMyGroup(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.organisation.director == request.user:
             return True
@@ -32,7 +33,7 @@ class IsMyGroup(BasePermission):
         return False
 
 
-class IsOfferManager(BasePermission):
+class IsOfferManager(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.organisation.director == request.user:
             return True

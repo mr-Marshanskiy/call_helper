@@ -1,10 +1,11 @@
-from django.db.models import Case, When, Q
+from django.db.models import Case, When, Q, F
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.filters import OrderingFilter
 
 from common.views.mixins import  ListCreateUpdateViewSet
 from organisations.backends import OwnedByOrganisation
+from organisations.faactory.offers import OfferFactory
 from organisations.filters import OfferOrgFilter, OfferUserFilter
 from organisations.models.offers import Offer
 from organisations.permissions import IsOfferManager
@@ -40,23 +41,7 @@ class OfferOrganisationView(ListCreateUpdateViewSet):
     ordering_fields = ('-created_at', 'updated_at',)
 
     def get_queryset(self):
-        qs = Offer.objects.select_related(
-            'user',
-        ).prefetch_related(
-            'organisation',
-        ).annotate(
-            can_accept=Case(
-                # TODO: обновить с учетом заявки от пользователя
-                When(Q(user_accept__isnull=True, org_accept=False), then=True,),
-                default=False,
-            ),
-            can_reject=Case(
-                # TODO: обновить с учетом заявки от пользователя
-                When(Q(user_accept__isnull=True, org_accept=True), then=True,),
-                default=False,
-            ),
-        )
-        return qs
+        return OfferFactory().org_list()
 
 
 @extend_schema_view(
@@ -84,20 +69,4 @@ class OfferUserView(ListCreateUpdateViewSet):
     ordering_fields = ('created_at', 'updated_at',)
 
     def get_queryset(self):
-        qs = Offer.objects.select_related(
-            'user',
-        ).prefetch_related(
-            'organisation',
-        ).filter(
-            user=self.request.user,
-        ).annotate(
-            can_accept=Case(
-                When(Q(org_accept__isnull=True, user_accept=False), then=True,),
-                default=False,
-            ),
-            can_reject=Case(
-                When(Q(org_accept__isnull=True, user_accept=True), then=True,),
-                default=False,
-            ),
-        )
-        return qs
+        return OfferFactory().user_list()

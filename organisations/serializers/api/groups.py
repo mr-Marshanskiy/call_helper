@@ -7,6 +7,7 @@ from common.serializers.mixins import ExtendedModelSerializer, \
     InfoModelSerializer
 from organisations.models.groups import Group
 from organisations.models.organisations import Organisation
+from organisations.serializers.nested.employees import EmployeeShortSerializer
 from organisations.serializers.nested.organisations import \
     OrganisationShortSerializer
 from users.serializers.nested.users import UserShortSerializer
@@ -16,7 +17,7 @@ User = get_user_model()
 
 class GroupListSerializer(InfoModelSerializer):
     organisation = OrganisationShortSerializer()
-    manager = UserShortSerializer()
+    manager = EmployeeShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -37,7 +38,7 @@ class GroupListSerializer(InfoModelSerializer):
 
 class GroupRetrieveSerializer(InfoModelSerializer):
     organisation = OrganisationShortSerializer()
-    manager = UserShortSerializer()
+    manager = EmployeeShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()

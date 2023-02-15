@@ -6,7 +6,7 @@ from rest_framework.exceptions import ParseError
 
 from common.serializers.mixins import ExtendedModelSerializer, \
     InfoModelSerializer
-from organisations.cinstants import DIRECTOR_POSITION
+from organisations.constants import DIRECTOR_POSITION
 from organisations.models.organisations import Organisation
 from users.serializers.nested.users import UserShortSerializer
 

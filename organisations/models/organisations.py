@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 from common.models.mixins import InfoMixin
-from organisations.cinstants import DIRECTOR_POSITION
+from organisations.constants import DIRECTOR_POSITION
 
 User = get_user_model()
 

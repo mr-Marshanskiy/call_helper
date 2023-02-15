@@ -1,6 +1,7 @@
 import django_filters
 from django.db.models import Q, F
 
+from organisations.constants import DIRECTOR_POSITION, MANAGER_POSITION
 from organisations.models.groups import Group
 from organisations.models.offers import Offer
 from organisations.models.organisations import Organisation, Employee
@@ -18,10 +19,16 @@ class EmployeeFilter(django_filters.FilterSet):
     only_corporate = django_filters.BooleanFilter(
         'user__is_corporate_account', label='Is corporate account'
     )
+    can_be_group_manager = django_filters.BooleanFilter(
+        method='can_be_group_manager_filter', label='Can be group manager'
+    )
 
     class Meta:
         model = Employee
         fields = ('only_corporate',)
+
+    def can_be_group_manager_filter(self, queryset, name, value):
+        return queryset.filter(position_id__in=[DIRECTOR_POSITION, MANAGER_POSITION])
 
 
 class GroupFilter(django_filters.FilterSet):

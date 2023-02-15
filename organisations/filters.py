@@ -26,10 +26,11 @@ class EmployeeFilter(django_filters.FilterSet):
 
 class GroupFilter(django_filters.FilterSet):
     is_member = django_filters.BooleanFilter('is_member',)
+    can_manage = django_filters.BooleanFilter('can_manage',)
 
     class Meta:
         model = Group
-        fields = ('organisation', 'manager', 'is_member',)
+        fields = ('organisation', 'manager',)
 
 
 class OfferOrgFilter(django_filters.FilterSet):
@@ -124,9 +125,9 @@ class OfferUserFilter(django_filters.FilterSet):
 
     def decision_filter(self, queryset, name, value):
         offer_type = self.data.get('type')
-        if offer_type not in ['sent', 'received']:
+        if offer_type not in ('sent', 'received'):
             return queryset
-        if value not in ['accept', 'reject', 'unknown']:
+        if value not in ('accept', 'reject', 'unknown'):
             return queryset
 
         sent_type = bool(offer_type == 'sent')

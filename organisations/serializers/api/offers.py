@@ -8,7 +8,7 @@ from rest_framework.exceptions import ParseError
 
 from common.serializers.mixins import ExtendedModelSerializer, \
     InfoModelSerializer
-from organisations.cinstants import OPERATOR_POSITION
+from organisations.constants import OPERATOR_POSITION
 from organisations.models.offers import Offer
 from organisations.models.organisations import Organisation
 from organisations.serializers.nested.organisations import \

@@ -1,3 +1,4 @@
+from crum import get_current_user
 from django.db.models import Case, When, Q, F
 
 from organisations.models.offers import Offer
@@ -46,7 +47,7 @@ class OfferFactory:
         ).prefetch_related(
             'organisation',
         ).filter(
-            user=self.request.user,
+            user=get_current_user(),
         ).annotate(
             offer_type=Case(
                 When(created_by=F('user'), then='sent'), default='receive'

@@ -1,5 +1,5 @@
 from crum import get_current_user
-from django.db.models import Case, When, Q, F
+from django.db.models import Case, When, Q, F, Value
 
 from organisations.models.offers import Offer
 
@@ -14,7 +14,7 @@ class OfferFactory:
             'organisation',
         ).annotate(
             offer_type=Case(
-                When(~Q(created_by=F('user')), then='sent'), default='receive'
+                When(~Q(created_by=F('user')), then=Value('sent')), default=Value('received')
             ),
             can_accept=Case(
                 When(
@@ -22,7 +22,7 @@ class OfferFactory:
                     then=True,
                 ),
                 When(
-                    Q(offer_type='receive', user_accept=True, org_accept__isnull=True),
+                    Q(offer_type='received', user_accept=True, org_accept__isnull=True),
                     then=True,
                 ),
                 default=False,
@@ -33,7 +33,7 @@ class OfferFactory:
                     then=True,
                 ),
                 When(
-                    Q(offer_type='receive', user_accept=True, org_accept__isnull=True),
+                    Q(offer_type='received', user_accept=True, org_accept__isnull=True),
                     then=True,
                 ),
                 default=False,
@@ -50,26 +50,26 @@ class OfferFactory:
             user=get_current_user(),
         ).annotate(
             offer_type=Case(
-                When(created_by=F('user'), then='sent'), default='receive'
+                When(Q(created_by=F('user')), then=Value('sent')), default=Value('received')
             ),
             can_accept=Case(
                 When(
-                    Q(offer_type='sent', org_accept__isnull=True, user_accept=False),
+                    Q(offer_type=True, org_accept__isnull=True, user_accept=False),
                     then=True,
                 ),
                 When(
-                    Q(offer_type='receive', org_accept=True, user_accept__isnull=True),
+                    Q(offer_type=False, org_accept=True, user_accept__isnull=True),
                     then=True,
                 ),
                 default=False,
             ),
             can_reject=Case(
                 When(
-                    Q(offer_type='sent', org_accept__isnull=True, user_accept=True),
+                    Q(offer_type=True, org_accept__isnull=True, user_accept=True),
                     then=True,
                 ),
                 When(
-                    Q(offer_type='receive', org_accept=True, user_accept__isnull=True),
+                    Q(offer_type=False, org_accept=True, user_accept__isnull=True),
                     then=True,
                 ),
                 default=False,

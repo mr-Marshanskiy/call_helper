@@ -5,7 +5,7 @@ from rest_framework.filters import OrderingFilter
 
 from common.views.mixins import  ListCreateUpdateViewSet
 from organisations.backends import OwnedByOrganisation
-from organisations.faactory.offers import OfferFactory
+from organisations.factory.offers import OfferFactory
 from organisations.filters import OfferOrgFilter, OfferUserFilter
 from organisations.models.offers import Offer
 from organisations.permissions import IsOfferManager

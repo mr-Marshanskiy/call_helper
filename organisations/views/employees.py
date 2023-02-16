@@ -52,6 +52,7 @@ class EmployeeView(CRUDViewSet):
         'update': employees_s.EmployeeUpdateSerializer,
         'partial_update': employees_s.EmployeeUpdateSerializer,
         'search': employees_s.EmployeeSearchSerializer,
+        'destroy': employees_s.EmployeeDeleteSerializer,
     }
 
     lookup_url_kwarg = 'employee_id'
@@ -78,3 +79,9 @@ class EmployeeView(CRUDViewSet):
     @action(methods=['GET'], detail=False, url_path='search')
     def search(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=dict())
+        serializer.is_valid(raise_exception=True)
+        return super().destroy(request, *args, **kwargs)

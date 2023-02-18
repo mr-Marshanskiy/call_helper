@@ -3,31 +3,12 @@ from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 
-from common.views.mixins import CRUDViewSet, ListViewSet
+from common.views.mixins import LCRUDViewSet, ListViewSet
 from organisations.backends import OwnedByOrganisation
 from organisations.filters import EmployeeFilter
 from organisations.models.organisations import Employee
 from organisations.permissions import IsColleagues
 from organisations.serializers.api import employees as employees_s
-
-
-@extend_schema_view(
-    list=extend_schema(summary='Список сотрудников Search', tags=['Словари']),
-)
-class OrganisationSearchView(ListViewSet):
-    queryset = Employee.objects.all()
-    serializer_class = employees_s.EmployeeSearchSerializer
-
-    filter_backends = (OwnedByOrganisation,)
-
-    def get_queryset(self):
-        qs = Employee.objects.select_related(
-            'user',
-            'position',
-        ).prefetch_related(
-            'organisation',
-        )
-        return qs
 
 
 @extend_schema_view(
@@ -39,7 +20,7 @@ class OrganisationSearchView(ListViewSet):
     destroy=extend_schema(summary='Удалить сотрудника из организации', tags=['Организации: Сотрудники']),
     search=extend_schema(filters=True, summary='Список сотрудников организации Search', tags=['Словари']),
 )
-class EmployeeView(CRUDViewSet):
+class EmployeeView(LCRUDViewSet):
     permission_classes = [IsColleagues]
 
     queryset = Employee.objects.all()

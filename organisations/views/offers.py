@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.filters import OrderingFilter
 
-from common.views.mixins import  ListCreateUpdateViewSet
+from common.views.mixins import  LCUViewSet
 from organisations.backends import OwnedByOrganisation
 from organisations.factory.offers import OfferFactory
 from organisations.filters import OfferOrgFilter, OfferUserFilter
@@ -17,7 +17,7 @@ from organisations.serializers.api import offers as offers_s
     create=extend_schema(summary='Создать ооферы пользователям', tags=['Организации: Офферы']),
     partial_update=extend_schema(summary='Изменить оффер пользователя частично', tags=['Организации: Офферы']),
 )
-class OfferOrganisationView(ListCreateUpdateViewSet):
+class OfferOrganisationView(LCUViewSet):
     permission_classes = [IsOfferManager]
 
     queryset = Offer.objects.all()
@@ -49,7 +49,7 @@ class OfferOrganisationView(ListCreateUpdateViewSet):
     create=extend_schema(summary='Создать оофер в организацию', tags=['Организации: Офферы']),
     partial_update=extend_schema(summary='Изменить оффер в организацию частично', tags=['Организации: Офферы']),
 )
-class OfferUserView(ListCreateUpdateViewSet):
+class OfferUserView(LCUViewSet):
     queryset = Offer.objects.all()
     serializer_class = offers_s.OfferUserToOrgListSerializer
 

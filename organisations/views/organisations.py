@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 
-from common.views.mixins import ListViewSet, CRUViewSet
+from common.views.mixins import ListViewSet, LCRUViewSet
 from organisations.backends import MyOrganisation
 from organisations.filters import OrganisationFilter
 from organisations.models.organisations import Organisation
@@ -28,7 +28,7 @@ class OrganisationSearchView(ListViewSet):
     update=extend_schema(summary='Изменить организацию', tags=['Организации']),
     partial_update=extend_schema(summary='Изменить организацию частично', tags=['Организации']),
 )
-class OrganisationView(CRUViewSet):
+class OrganisationView(LCRUViewSet):
     permission_classes = [IsMyOrganisation]
     queryset = Organisation.objects.all()
     serializer_class = organisations.OrganisationListSerializer

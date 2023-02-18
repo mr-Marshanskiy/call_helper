@@ -9,7 +9,7 @@ from organisations.models import organisations, groups, dicts, offers
 ##############################
 class EmployeeInline(admin.TabularInline):
     model = organisations.Employee
-    fields = ('employee', 'position', 'date_joined',)
+    fields = ('user', 'position', 'date_joined',)
 
 
 class OfferInline(admin.TabularInline):
@@ -46,7 +46,7 @@ class PositionAdmin(admin.ModelAdmin):
 class OrganisationAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'director',)
     filter_vertical = ('employees',)
-    inlines = (EmployeeInline,OfferInline,)
+    inlines = (EmployeeInline, OfferInline,)
     readonly_fields = (
         'created_at', 'created_by', 'updated_at', 'updated_by',
     )

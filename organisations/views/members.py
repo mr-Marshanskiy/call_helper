@@ -1,10 +1,8 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter, OrderingFilter
 
 from common.views.mixins import LCDViewSet
-from organisations.backends import OwnedByOrganisation, OwnedByGroup
+from organisations.backends import OwnedByGroup
 from organisations.models.groups import Member
 from organisations.permissions import IsColleagues
 from organisations.serializers.api import members as members_s
@@ -12,10 +10,9 @@ from organisations.serializers.api import members as members_s
 
 @extend_schema_view(
     list=extend_schema(summary='Список участников группы', tags=['Организации: Группы: Участники']),
-    retrieve=extend_schema(summary='Деталка участника группы', tags=['Организации: Группы: Участники']),
     create=extend_schema(summary='Создать участника группы', tags=['Организации: Группы: Участники']),
-    destroy=extend_schema(summary='Удалить сотрудника из организации', tags=['Организации: Группы: Участники']),
-    search=extend_schema(filters=True, summary='Список сотрудников организации Search', tags=['Словари']),
+    destroy=extend_schema(summary='Удалить участника из группы', tags=['Организации: Группы: Участники']),
+    search=extend_schema(filters=True, summary='Список участников группы Search', tags=['Словари']),
 )
 class MemberView(LCDViewSet):
     permission_classes = [IsColleagues]
@@ -25,7 +22,6 @@ class MemberView(LCDViewSet):
 
     multi_serializer_class = {
         'list': members_s.MemberListSerializer,
-        'retrieve': members_s.MemberRetrieveSerializer,
         'create': members_s.MemberCreateSerializer,
         'search': members_s.MemberSearchSerializer,
     }

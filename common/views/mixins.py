@@ -72,6 +72,10 @@ class ListViewSet(ExtendedGenericViewSet, mixins.ListModelMixin):
     pass
 
 
+class UpdateViewSet(ExtendedGenericViewSet, mixins.UpdateModelMixin):
+    pass
+
+
 class DictListMixin(ListViewSet):
     serializer_class = DictMixinSerializer
     pagination_class = None

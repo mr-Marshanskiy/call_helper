@@ -43,6 +43,9 @@ class IsMyGroup(IsAuthenticated):
 
         if request.method in SAFE_METHODS:
             return request.user in obj.organisation.employees.all()
+
+        if obj.manager.user == request.user:
+            return True
         return False
 
 

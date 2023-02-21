@@ -19,7 +19,7 @@ class MyOrganisation(BaseFilterBackend):
         user = request.user
         return queryset.filter(
             Q(director=user) | Q(employees=user)
-        )
+        ).distinct()
 
 
 class MyGroup(BaseFilterBackend):
@@ -27,4 +27,4 @@ class MyGroup(BaseFilterBackend):
         user = request.user
         return queryset.filter(
             Q(organisation__director=user) | Q(organisation__employees=user)
-        )
+        ).distinct()

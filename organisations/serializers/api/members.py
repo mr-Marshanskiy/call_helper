@@ -55,6 +55,7 @@ class MemberCreateSerializer(ExtendedModelSerializer):
     employees = serializers.PrimaryKeyRelatedField(
         queryset=Employee.objects.all(), many=True, write_only=True
     )
+
     class Meta:
         model = Member
         fields = (

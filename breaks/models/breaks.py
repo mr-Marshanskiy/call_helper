@@ -1,5 +1,3 @@
-import pdb
-
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -15,6 +13,9 @@ class Break(models.Model):
     )
     employee = models.ForeignKey(
         User, models.CASCADE, 'breaks', verbose_name='Сотрудник',
+    )
+    member = models.ForeignKey(
+        'organisations.Member', models.CASCADE, 'breaks', verbose_name='Участник группы',
     )
     break_start = models.TimeField('Начало обеда', null=True, blank=True,)
     break_end = models.TimeField('Конец обеда', null=True, blank=True,)

@@ -10,21 +10,14 @@ from breaks.models.replacements import GroupInfo
 ##############################
 # INLINES
 ##############################
-class ReplacementEmployeeInline(TabularInline):
-    model = replacements.ReplacementEmployee
-    fields = ('employee', 'status',)
+class ReplacementMemberInline(TabularInline):
+    model = replacements.ReplacementMember
+    fields = ('member', 'status',)
 
 
 ##############################
 # MODELS
 ##############################
-@admin.register(GroupInfo)
-class GroupInfoAdmin(admin.ModelAdmin):
-    list_display = (
-        'group', 'break_start', 'break_end',
-    )
-
-
 @admin.register(dicts.ReplacementStatus)
 class ReplacementStatusAdmin(admin.ModelAdmin):
     list_display = (
@@ -45,7 +38,7 @@ class ReplacementAdmin(admin.ModelAdmin):
         'id', 'group', 'date', 'break_start', 'break_end', 'break_max_duration',
     )
     inlines = (
-        ReplacementEmployeeInline,
+        ReplacementMemberInline,
     )
 
 

@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 
 from common.models.mixins import InfoMixin
+from organisations.managers.groups import GroupManager
 
 User = get_user_model()
 
@@ -21,6 +22,8 @@ class Group(InfoMixin):
         'Employee', 'groups_members', verbose_name='Участники группы',
         blank=True, through='Member',
     )
+
+    objects = GroupManager()
 
     class Meta:
         verbose_name = 'Группа'

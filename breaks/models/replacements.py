@@ -25,7 +25,7 @@ class GroupInfo(models.Model):
         verbose_name_plural = 'Параметры обеденных перерывов'
 
     def __str__(self):
-        return f'{self.group}'
+        return f'Break Info'
 
 
 class Replacement(InfoMixin):

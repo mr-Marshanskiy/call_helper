@@ -125,10 +125,14 @@ class ReplacementCreateSerializer(InfoModelSerializer):
             'break_start', 'break_end', 'break_max_duration', 'min_active',
         )
         for field in required_fields:
-            field_data = (
-                attrs.get(field) or getattr(attrs['group'].breaks_info, field)
-                if hasattr(attrs['group'], 'breaks_info') else None
-            )
+            try:
+                from_default = getattr(attrs['group'].breaks_info, field)
+            except:
+                from_default = None
+
+            from_request = attrs.get(field)
+            field_data = from_request or from_default
+
             if not field_data:
                 field_name = getattr(self.Meta.model, field).field.verbose_name
                 raise ParseError(
@@ -143,6 +147,14 @@ class ReplacementCreateSerializer(InfoModelSerializer):
                 raise ParseError(
                     'Время начала перерыва должно быть меньше времени окончания.'
                 )
+
+        # Check duplicates
+        if self.Meta.model.objects.filter(
+            group_id=attrs['group'].pk, date=attrs['date']
+        ).exists():
+            raise ParseError(
+                'На этот день уже существует активная смена.'
+            )
         return attrs
 
     def validate_group(self, value):
@@ -246,6 +258,14 @@ class ReplacementUpdateSerializer(InfoModelSerializer):
                 raise ParseError(
                     'Время начала перерыва должно быть меньше времени окончания.'
                 )
+
+        # Check duplicates
+        if attrs.get('date') and self.Meta.model.objects.filter(
+                group_id=self.instance.group.pk, date=attrs['date']
+        ).exists():
+            raise ParseError(
+                'На этот день уже существует активная смена.'
+            )
         return attrs
 
     def validate_date(self, value):

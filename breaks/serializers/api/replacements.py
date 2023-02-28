@@ -102,7 +102,9 @@ class ReplacementCreateSerializer(InfoModelSerializer):
                 members = validated_data.pop('members')
             instance = super().create(validated_data)
 
-            instance.members.set(members)
+            instance.members.set(
+                members, through_defaults={'status_id': 'created'}
+            )
 
             if remember_data:
                 defaults = {
@@ -223,7 +225,9 @@ class ReplacementUpdateSerializer(InfoModelSerializer):
             instance = super().update(instance, validated_data)
 
             if members:
-                instance.members.set(members)
+                instance.members.set(
+                    members, through_defaults={'status_id': 'created'}
+                )
 
             if remember_data:
                 defaults = {
@@ -253,8 +257,11 @@ class ReplacementUpdateSerializer(InfoModelSerializer):
 
     def validate(self, attrs):
         # Check times
-        if attrs.get('break_start') and attrs.get('break_end'):
-            if attrs.get('break_start') >= attrs.get('break_end'):
+
+        if attrs.get('break_start') or attrs.get('break_end'):
+            break_start = attrs.get('break_start') or self.instance.break_start
+            break_end = attrs.get('break_end') or self.instance.break_end
+            if break_start >= break_end:
                 raise ParseError(
                     'Время начала перерыва должно быть меньше времени окончания.'
                 )
@@ -262,7 +269,7 @@ class ReplacementUpdateSerializer(InfoModelSerializer):
         # Check duplicates
         if attrs.get('date') and self.Meta.model.objects.filter(
                 group_id=self.instance.group.pk, date=attrs['date']
-        ).exists():
+        ).exclude(pk=self.instance.pk).exists():
             raise ParseError(
                 'На этот день уже существует активная смена.'
             )

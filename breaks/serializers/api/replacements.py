@@ -111,10 +111,9 @@ class ReplacementCreateSerializer(InfoModelSerializer):
                     'break_max_duration': validated_data['break_max_duration'],
                     'min_active': validated_data['min_active'],
                 }
+                group = instance.group
                 for key, value in defaults.items():
-                    group = instance.group
                     setattr(group, key, value)
-
                 group.save()
 
             return instance
@@ -178,6 +177,95 @@ class ReplacementCreateSerializer(InfoModelSerializer):
 
 
 class ReplacementUpdateSerializer(InfoModelSerializer):
+    members = serializers.PrimaryKeyRelatedField(
+        queryset=Member.objects.all(), many=True, allow_null=True,
+        required=False,
+    )
+    all_group_members = serializers.BooleanField(default=False)
+    remember_default_data = serializers.BooleanField(default=False)
+
     class Meta:
         model = Replacement
-        fields = '__all__'
+        fields = (
+            'id',
+            'date',
+            'break_start',
+            'break_end',
+            'break_max_duration',
+            'min_active',
+            'members',
+            'all_group_members',
+            'remember_default_data',
+        )
+
+    def update(self, instance, validated_data):
+        remember_data = validated_data.pop('remember_default_data', False)
+        all_group_members = validated_data.pop('all_group_members', False)
+
+        with transaction.atomic():
+            if all_group_members:
+                validated_data.pop('members', list())
+                members = self.instance.group.members_info.all()
+            else:
+                members = validated_data.pop('members', None)
+            instance = super().update(instance, validated_data)
+
+            if members:
+                instance.members.set(members)
+
+            if remember_data:
+                defaults = {
+                    'break_start': (
+                            validated_data.get('break_start')
+                            or self.instance.break_start
+                    ),
+                    'break_end': (
+                            validated_data.get('break_end')
+                            or self.instance.break_end
+                    ),
+                    'break_max_duration': (
+                            validated_data.get('break_max_duration')
+                            or self.instance.break_max_duration
+                    ),
+                    'min_active': (
+                            validated_data.get('min_active')
+                            or self.instance.min_active
+                    ),
+                }
+                group = instance.group
+                for key, value in defaults.items():
+                    setattr(group, key, value)
+                group.save()
+
+            return instance
+
+    def validate(self, attrs):
+        # Check times
+        if attrs.get('break_start') and attrs.get('break_end'):
+            if attrs.get('break_start') >= attrs.get('break_end'):
+                raise ParseError(
+                    'Время начала перерыва должно быть меньше времени окончания.'
+                )
+        return attrs
+
+    def validate_date(self, value):
+        now = timezone.now().date()
+        if value < now:
+            raise ParseError(
+                'Дата смены должна быть больше или равна текущей дате.'
+            )
+        return value
+
+    def validate_break_start(self, value):
+        if value.minute % 15 > 0:
+            raise ParseError(
+                'Время начала перерыва должно быть кратно 15 минутам.'
+            )
+        return value
+
+    def validate_break_end(self, value):
+        if value.minute % 15 > 0:
+            raise ParseError(
+                'Время окончания перерыва должно быть кратно 15 минутам.'
+            )
+        return value

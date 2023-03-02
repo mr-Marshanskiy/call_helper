@@ -1,4 +1,5 @@
 from rest_framework import mixins
+from rest_framework.generics import GenericAPIView
 from rest_framework.viewsets import GenericViewSet
 
 from common.constants import roles
@@ -115,3 +116,16 @@ class LCDViewSet(ExtendedGenericViewSet,
     pass
 
 
+class ExtendedGenericAPIView(ExtendedView, GenericAPIView):
+    pass
+
+
+class ExtendedRetrieveUpdateAPIView(mixins.RetrieveModelMixin,
+                                    mixins.UpdateModelMixin,
+                                    ExtendedGenericAPIView,
+                                    ):
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)

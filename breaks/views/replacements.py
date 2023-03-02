@@ -1,10 +1,13 @@
+from crum import get_current_user
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.filters import OrderingFilter
+from rest_framework.generics import get_object_or_404
 
 from breaks.factory.replacements import ReplacementFactory
-from breaks.models.replacements import Replacement
-from common.views.mixins import LCRUViewSet
+from breaks.models.replacements import Replacement, ReplacementMember
+from common.views.mixins import LCRUViewSet, ExtendedRetrieveUpdateAPIView
 from breaks.serializers.api import replacements as replacements_s
 
 
@@ -38,3 +41,25 @@ class ReplacementView(LCRUViewSet):
 
     def get_queryset(self):
         return ReplacementFactory().list()
+
+
+@extend_schema_view(
+    get=extend_schema(summary='Данные участника смены', tags=['Обеды: Смены']),
+    patch=extend_schema(summary='Изменить участника смены', tags=['Обеды: Смены']),
+)
+class MeReplacementMemberView(ExtendedRetrieveUpdateAPIView):
+    queryset = ReplacementMember.objects.all()
+    serializer_class = replacements_s.ReplacementMemberListSerializer
+    multi_serializer_class = {
+        'GET': replacements_s.ReplacementMemberListSerializer,
+        'PATCH': replacements_s.ReplacementMemberUpdateSerializer,
+    }
+
+    def get_object(self):
+        user = get_current_user()
+        replacement_id = self.request.parser_context['kwargs'].get('pk')
+        member = get_object_or_404(
+            ReplacementMember,
+            Q(replacement_id=replacement_id, member__employee__user=user)
+        )
+        return member

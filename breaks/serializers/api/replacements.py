@@ -7,9 +7,9 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from breaks.models.replacements import Replacement, GroupInfo
+from breaks.models.replacements import Replacement, GroupInfo, ReplacementMember
 from breaks.serializers.internal.replacements import ReplacementStatsSerializer
-from common.serializers.mixins import InfoModelSerializer
+from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer
 from organisations.models.groups import Member, Group
 from organisations.serializers.nested.groups import GroupShortSerializer
 
@@ -296,3 +296,24 @@ class ReplacementUpdateSerializer(InfoModelSerializer):
                 'Время окончания перерыва должно быть кратно 15 минутам.'
             )
         return value
+
+
+class ReplacementMemberListSerializer(InfoModelSerializer):
+    status = DictMixinSerializer()
+
+    class Meta:
+        model = ReplacementMember
+        fields = (
+            'id',
+            'status',
+        )
+
+
+class ReplacementMemberUpdateSerializer(InfoModelSerializer):
+
+    class Meta:
+        model = ReplacementMember
+        fields = (
+            'id',
+            'status',
+        )

@@ -133,5 +133,6 @@ class UserSearchListSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
+            'email',
             'full_name',
         )

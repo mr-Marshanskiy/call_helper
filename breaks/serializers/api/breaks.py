@@ -2,6 +2,7 @@ import datetime
 
 from crum import get_current_user
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from rest_framework.exceptions import ParseError
 
 from breaks.models.breaks import Break
@@ -51,6 +52,11 @@ class BreakMeCreateSerializer(InfoModelSerializer):
             member__employee__user=user
         ).first()
 
+        now = timezone.now().date()
+        if replacement.date != now:
+            raise ParseError(
+                'Время резервирования перерыва уже закончилось или ещё не началось.'
+            )
         if not member:
             raise ParseError('У вас нет доступа к текущей смене.')
 
@@ -75,11 +81,19 @@ class BreakMeCreateSerializer(InfoModelSerializer):
                 'Продолжительность обеда превышает максимальное установленное значение.'
             )
 
-        free_breaks = replacement.free_breaks_available(attrs['break_start'], attrs['break_end'])
+        free_breaks = replacement.free_breaks_available(
+            attrs['break_start'], attrs['break_end']
+        )
         if free_breaks <= replacement.min_active:
             raise ParseError('Нет свободных мест на выбранный интервал.')
         attrs['replacement'] = replacement
         attrs['member'] = member
+
+        if replacement.breaks.filter(member=member).exists():
+            raise ParseError(
+                'Вы уже зарезервировали обеденный перерыв.'
+            )
+
         return attrs
 
 

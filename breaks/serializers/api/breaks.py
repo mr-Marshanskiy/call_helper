@@ -70,10 +70,14 @@ class BreakMeCreateSerializer(InfoModelSerializer):
         max_duration = datetime.timedelta(minutes=replacement.break_max_duration)
         break_start = datetime.datetime.combine(datetime.date.today(), attrs['break_start'])
         break_end = datetime.datetime.combine(datetime.date.today(), attrs['break_end'])
-        if break_start + max_duration > break_end:
+        if break_start + max_duration < break_end:
             raise ParseError(
                 'Продолжительность обеда превышает максимальное установленное значение.'
             )
+
+        free_breaks = replacement.free_breaks_available(attrs['break_start'], attrs['break_end'])
+        if free_breaks <= replacement.min_active:
+            raise ParseError('Нет свободных мест на выбранный интервал.')
         attrs['replacement'] = replacement
         attrs['member'] = member
         return attrs

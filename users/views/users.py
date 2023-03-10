@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import generics
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -68,8 +69,11 @@ class MeView(RetrieveUpdateAPIView):
     list=extend_schema(summary='Список пользователей Search', tags=['Словари']),
 )
 class UserListSearchView(ListViewSet):
-    # Убрать из списка суперюзеров
     queryset = User.objects.exclude(
         Q(is_superuser=True) | Q(is_corporate_account=True)
     )
     serializer_class = user_s.UserSearchListSerializer
+    filter_backends = (
+        SearchFilter,
+    )
+    search_fields = ('last_name', 'email', 'username',)

@@ -1,14 +1,17 @@
 import datetime
+import pdb
 
 from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
 from breaks.models.breaks import Break
 from breaks.models.replacements import Replacement, ReplacementMember
 from breaks.serializers.nested.replacements import ReplacementShortSerializer
-from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer
+from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer, \
+    ExtendedModelSerializer
 from common.validationrs import Time15MinutesValidator
 
 User = get_user_model()
@@ -101,3 +104,59 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
                 )
 
         return attrs
+
+
+class BreakScheduleSerializer(serializers.Serializer):
+    final_line = serializers.SerializerMethodField()
+
+    def get_final_line(self, instance):
+        line = [self.get_instance(instance)]
+        pre_blank = self.get_pre_blank(instance)
+        if pre_blank['colspan'] > 0:
+            line.append(pre_blank)
+        line.append(self.get_break(instance))
+        post_blank = self.get_post_blank(instance)
+        if post_blank['colspan'] > 0:
+            line.append(post_blank)
+        return line
+
+    def get_instance(self, instance):
+        result = self._convert_to_cell(
+            value=instance.member.member.employee.user.full_name,
+            color=instance.status.color,
+        )
+        return result
+
+    def get_pre_blank(self, instance):
+        span = self._get_span_count(
+            instance.replacement.break_start, instance.break_start
+        )
+        return self._convert_to_cell(span=span)
+
+    def get_break(self, instance):
+        span = self._get_span_count(instance.break_start, instance.break_end)
+        value = f'{instance.break_start} - {instance.break_end}'
+        color = instance.status.color
+        return self._convert_to_cell(value, color, span)
+
+    def get_post_blank(self, instance):
+        span = self._get_span_count(
+           instance.break_end, instance.replacement.break_end
+        )
+        return self._convert_to_cell(span=span)
+
+    def _convert_to_cell(self, value='', color='#fff', span=None):
+        obj = {'value': value, 'color': color}
+        if span:
+            obj['colspan'] = span
+        return obj
+
+    def _get_span_count(self, start_board, start_instance):
+        board_minutes = start_board.hour * 60 + start_board.minute
+        instance_minutes = start_instance.hour * 60 + start_instance.minute
+        span = int((instance_minutes - board_minutes) / 15)
+        return span
+
+    def to_representation(self, instance):
+        return self.fields['final_line'].to_representation(instance)
+

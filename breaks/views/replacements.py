@@ -37,7 +37,7 @@ class ReplacementView(LCRUViewSet):
         DjangoFilterBackend,
         # MyReplacement,
     )
-    # filterset_class = ReplacementFilter
+    filterset_fields = ('group',)
 
     def get_queryset(self):
         return ReplacementFactory().list()

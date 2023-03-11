@@ -12,6 +12,7 @@ router.register(r'dicts/statuses/replacements', dicts.ReplacementStatusView, 're
 urlpatterns = [
     path('breaks/replacements/<int:pk>/member/', replacements.MeReplacementMemberView.as_view(), name='replacement-member'),
     path('breaks/replacements/<int:pk>/break/', breaks.BreakMeView.as_view(), name='break-me'),
+    # path('breaks/replacements/<int:pk>/schedule/', breaks.BreakMeView.as_view(), name='break-me'),
 
     path('breaks/', include(router.urls)),
 ]

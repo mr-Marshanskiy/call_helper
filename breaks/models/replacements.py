@@ -103,8 +103,6 @@ class Replacement(InfoMixin):
         ).order_by(
             'breaks'
         )
-        for obj in data_seq_qs:
-            print(obj.term, obj.breaks)
         return data_seq_qs.first().breaks
 
 

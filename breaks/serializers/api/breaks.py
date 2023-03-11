@@ -29,7 +29,7 @@ class BreakMeRetrieveSerializer(InfoModelSerializer):
         )
 
 
-class BreakMeCreateSerializer(InfoModelSerializer):
+class BreakMeUpdateSerializer(InfoModelSerializer):
 
     class Meta:
         model = Break
@@ -44,6 +44,11 @@ class BreakMeCreateSerializer(InfoModelSerializer):
         }
 
     def validate(self, attrs):
+        try:
+            instance_id = self.instance.pk
+        except:
+            instance_id = None
+
         replacement = self.get_object_from_url(Replacement)
         user = get_current_user()
 
@@ -82,31 +87,17 @@ class BreakMeCreateSerializer(InfoModelSerializer):
             )
 
         free_breaks = replacement.free_breaks_available(
-            attrs['break_start'], attrs['break_end']
+            attrs['break_start'], attrs['break_end'], instance_id
         )
         if free_breaks <= replacement.min_active:
             raise ParseError('Нет свободных мест на выбранный интервал.')
         attrs['replacement'] = replacement
         attrs['member'] = member
 
-        if replacement.breaks.filter(member=member).exists():
-            raise ParseError(
-                'Вы уже зарезервировали обеденный перерыв.'
-            )
+        if not instance_id:
+            if replacement.breaks.filter(member=member).exists():
+                raise ParseError(
+                    'Вы уже зарезервировали обеденный перерыв.'
+                )
 
         return attrs
-
-
-class BreakMeUpdateSerializer(InfoModelSerializer):
-
-    class Meta:
-        model = Break
-        fields = (
-            'id',
-            'break_start',
-            'break_end',
-        )
-        extra_kwargs = {
-            'break_start': {'validators': [Time15MinutesValidator()]},
-            'break_end': {'validators': [Time15MinutesValidator()]},
-        }

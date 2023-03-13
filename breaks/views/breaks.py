@@ -3,8 +3,11 @@ import pdb
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
 from breaks.models.breaks import Break
+from breaks.models.replacements import Replacement
+from common.services import get_schedule_time_title
 from common.views.mixins import ExtendedCRUAPIView, ListViewSet
 from breaks.serializers.api import breaks as breaks_s
 
@@ -39,6 +42,18 @@ class BreakScheduleView(ListViewSet):
     # permission_classes = [IsNotCorporate]
     queryset = Break.objects.all()
     serializer_class = breaks_s.BreakScheduleSerializer
+    pagination_class = None
+
+    def list(self, request, *args, **kwargs):
+        replacement_id = self.request.parser_context['kwargs'].get('pk')
+        replacement = get_object_or_404(Replacement, id=replacement_id)
+        title = get_schedule_time_title(
+            replacement.break_start, replacement.break_end, 'Сотрудник'
+        )
+        qs = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(qs, many=True).data
+        serializer.insert(0, title)
+        return Response(serializer)
 
     def get_queryset(self):
         replacement_id = self.request.parser_context['kwargs'].get('pk')

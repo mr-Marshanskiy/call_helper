@@ -147,7 +147,7 @@ class BreakScheduleSerializer(serializers.Serializer):
 
     def _convert_to_cell(self, value='', color='#fff', span=None):
         obj = {'value': value, 'color': color}
-        if span:
+        if span is not None:
             obj['colspan'] = span
         return obj
 

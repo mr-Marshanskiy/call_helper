@@ -123,7 +123,8 @@ class BreakScheduleSerializer(serializers.Serializer):
     def get_instance(self, instance):
         result = self._convert_to_cell(
             value=instance.member.member.employee.user.full_name,
-            color=instance.status.color,
+            color='#fff',
+            span=2,
         )
         return result
 

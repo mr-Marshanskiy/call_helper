@@ -6,6 +6,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
 
 from breaks.factory.replacements import ReplacementFactory
+from breaks.filters import ReplacementFilter
 from breaks.models.replacements import Replacement, ReplacementMember
 from common.views.mixins import LCRUViewSet, ExtendedRetrieveUpdateAPIView
 from breaks.serializers.api import replacements as replacements_s
@@ -35,9 +36,8 @@ class ReplacementView(LCRUViewSet):
     filter_backends = (
         OrderingFilter,
         DjangoFilterBackend,
-        # MyReplacement,
     )
-    filterset_fields = ('group',)
+    filterset_class = ReplacementFilter
 
     def get_queryset(self):
         return ReplacementFactory().list()

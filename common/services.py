@@ -7,8 +7,8 @@ def get_schedule_time_title(start, end, first_col='', interval=15):
     end_datetime = datetime.datetime.combine(now, end)
 
     result = [
-        {'value': first_col, 'color': '#fff',},
-        {'value': '', 'color': '#fff',}
+        {'value': first_col, 'color': '#fff'},
+        {'value': '', 'color': '#fff'}
     ]
     while start_datetime < end_datetime:
         result.append(

@@ -1,5 +1,5 @@
 import django_filters
-from django.db.models import Q, F
+from django.db.models import Q
 from django.utils.datetime_safe import datetime
 
 from breaks.models.replacements import Replacement

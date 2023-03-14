@@ -6,8 +6,12 @@ from django.db import models
 from django.db.models import TimeField, OuterRef, Count, Q, F, Subquery, \
     IntegerField, ExpressionWrapper, DateTimeField
 from django.db.models.functions import Coalesce
+from django.utils import timezone
 from django_generate_series.models import generate_series
 
+from breaks import constants
+from breaks.constants import REPLACEMENT_MEMBER_ONLINE, REPLACEMENT_MEMBER_BUSY, \
+    REPLACEMENT_MEMBER_BREAK, REPLACEMENT_MEMBER_OFFLINE
 from breaks.models.breaks import Break
 from common.models.mixins import InfoMixin
 
@@ -120,9 +124,43 @@ class ReplacementMember(models.Model):
         verbose_name='Статус'
     )
 
+    time_online = models.DateTimeField(
+        'Начал смену', null=True, blank=True, editable=False
+    )
+    time_offline = models.DateTimeField(
+        'Закончил смену', null=True, blank=True, editable=False
+    )
+    time_break_start = models.DateTimeField(
+        'Ушел на обед', null=True, blank=True, editable=False
+    )
+    time_break_end = models.DateTimeField(
+        'Вернулся с обеда', null=True, blank=True, editable=False
+    )
+
     class Meta:
         verbose_name = 'Смена - участник группы'
         verbose_name_plural = 'Смены - участники группы'
 
     def __str__(self):
-        return f'Участник смены {self.member.employee.user} ({self.pk})'
+        return f'Участник смены {self.member.employee.user.full_name} ({self.pk})'
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            now = timezone.now()
+
+            if self.status_id == REPLACEMENT_MEMBER_ONLINE:
+                if not self.time_online:
+                    self.time_online = now
+                if self.time_break_start and not self.time_break_end:
+                    self.time_break_end = now
+
+            if self.status_id == REPLACEMENT_MEMBER_BREAK and not self.time_break_start:
+                self.time_break_start = now
+
+            if self.status_id == REPLACEMENT_MEMBER_OFFLINE:
+                if not self.time_offline:
+                    self.time_offline = now
+                if self.time_break_start and not self.time_break_end:
+                    self.time_break_end = now
+
+        super().save(*args, **kwargs)

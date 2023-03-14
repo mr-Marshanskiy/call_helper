@@ -12,7 +12,13 @@ from breaks.models.replacements import GroupInfo
 ##############################
 class ReplacementMemberInline(TabularInline):
     model = replacements.ReplacementMember
-    fields = ('member', 'status',)
+    fields = (
+        'member', 'status',
+        'time_online', 'time_offline', 'time_break_start', 'time_break_end',
+    )
+    readonly_fields = (
+        'time_online', 'time_offline', 'time_break_start', 'time_break_end',
+    )
 
 
 ##############################

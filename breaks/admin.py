@@ -58,7 +58,7 @@ class BreakAdmin(admin.ModelAdmin):
     )
     list_filter = ('status',)
     empty_value_display = 'Unknown'
-    radio_fields = {'status': admin.VERTICAL}
+    # radio_fields = {'status': admin.VERTICAL}
 
     def replacement_link(self, obj):
         link = reverse(

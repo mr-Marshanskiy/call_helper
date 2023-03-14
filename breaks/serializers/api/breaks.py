@@ -137,7 +137,7 @@ class BreakScheduleSerializer(serializers.Serializer):
     def get_break(self, instance):
         span = self._get_span_count(instance.break_start, instance.break_end)
         break_start = instance.break_start.strftime('%H:%M')
-        break_end = instance.break_start.strftime('%H:%M')
+        break_end = instance.break_end.strftime('%H:%M')
         value = f'{break_start} - {break_end}'
         color = instance.status.color
         return self._convert_to_cell(value, color, span)

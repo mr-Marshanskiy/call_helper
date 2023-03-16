@@ -1,14 +1,24 @@
+import datetime
 import pdb
 from datetime import timedelta
 
+from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models import Count, Q
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
+from breaks.constants import REPLACEMENT_MEMBER_ONLINE, \
+    REPLACEMENT_MEMBER_OFFLINE, REPLACEMENT_MEMBER_BUSY, \
+    REPLACEMENT_MEMBER_BREAK
 from breaks.models.replacements import Replacement, GroupInfo, ReplacementMember
-from breaks.serializers.internal.replacements import ReplacementStatsSerializer
+from breaks.serializers.internal.replacements import ReplacementStatsSerializer, \
+    ReplacementGeneralSerializer, ReplacementPersonalStatsSerializer, \
+    ReplacementBreakSerializer
+from breaks.serializers.nested.replacements import \
+    ReplacementMemberShortSerializer
 from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer
 from organisations.models.groups import Member, Group
 from organisations.serializers.nested.groups import GroupShortSerializer
@@ -38,6 +48,13 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
     group = GroupShortSerializer(source='group.group')
     stats = ReplacementStatsSerializer(source='*')
 
+    new_stats = serializers.SerializerMethodField()
+    general = ReplacementGeneralSerializer(source='*')
+    personal_stats = serializers.SerializerMethodField()
+    breaks = ReplacementBreakSerializer(source='*')
+    actions = serializers.SerializerMethodField()
+    members = ReplacementMemberShortSerializer(source='members_info', many=True)
+
     class Meta:
         model = Replacement
         fields = (
@@ -49,7 +66,76 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
             'break_max_duration',
             'min_active',
             'stats',
+            'new_stats',
+            'personal_stats',
+            'breaks',
+            'actions',
+            'members',
+            'general',
         )
+
+    def get_personal_stats(self, instance):
+        user = get_current_user()
+        member = instance.members_info.filter(
+            member__employee__user=user
+        ).first()
+        if not member:
+            return None
+
+        return ReplacementPersonalStatsSerializer(member).data
+
+    def get_new_stats(self, instance):
+        result = self.Meta.model.objects.filter(pk=instance.pk).aggregate(
+            members_count=Count('members', distinct=True),
+            breaks_count=Count('breaks', distinct=True),
+            members_online=Count('members', filter=Q(members_info__status_id=REPLACEMENT_MEMBER_ONLINE), distinct=True),
+            members_offline=Count('members', filter=Q(members_info__status_id=REPLACEMENT_MEMBER_OFFLINE), distinct=True),
+            members_busy=Count('members', filter=Q(members_info__status_id=REPLACEMENT_MEMBER_BUSY), distinct=True),
+            members_break=Count('members', filter=Q(members_info__status_id=REPLACEMENT_MEMBER_BREAK), distinct=True),
+        )
+        return result
+
+    def get_actions(self, instance):
+        result = {
+            'replacement_button': None,
+            'break_button': None,
+        }
+        now = datetime.datetime.now().astimezone()
+        if instance.date != now.date():
+            return result
+        user = get_current_user()
+        member = instance.get_member_by_user(user)
+        if not member:
+            return result
+
+        # replacement_button
+        if not member.time_online:
+            result['replacement_button'] = 'online'
+        elif not member.time_offline:
+            result['replacement_button'] = 'offline'
+
+        # breaks_button
+        break_obj = instance.get_break_for_user(user)
+        if not break_obj:
+            replacement_finish = datetime.datetime.combine(
+                instance.date, instance.break_end
+            ).astimezone()
+            if replacement_finish - datetime.timedelta(minutes=30) >= now:
+                result['break_button'] = 'create'
+        else:
+            member_break_start = datetime.datetime.combine(
+                now.date(), break_obj.break_start
+            ).astimezone()
+
+            if not member.time_break_start:
+                if now + timedelta(minutes=5) < member_break_start:
+                    result['break_button'] = 'coming'
+                else:
+                    result['break_button'] = 'start'
+            elif not member.time_break_end:
+                result['break_button'] = 'finish'
+
+            return result
 
 
 class ReplacementCreateSerializer(InfoModelSerializer):
@@ -103,7 +189,7 @@ class ReplacementCreateSerializer(InfoModelSerializer):
             instance = super().create(validated_data)
 
             instance.members.set(
-                members, through_defaults={'status_id': 'created'}
+                members, through_defaults={'status_id': 'offline'}
             )
 
             if remember_data:

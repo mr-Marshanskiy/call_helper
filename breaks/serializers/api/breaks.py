@@ -3,10 +3,13 @@ import pdb
 
 from crum import get_current_user
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
+from breaks.constants import REPLACEMENT_MEMBER_BREAK, \
+    REPLACEMENT_MEMBER_ONLINE, REPLACEMENT_MEMBER_OFFLINE
 from breaks.models.breaks import Break
 from breaks.models.replacements import Replacement, ReplacementMember
 from breaks.serializers.nested.replacements import ReplacementShortSerializer
@@ -33,6 +36,7 @@ class BreakMeRetrieveSerializer(InfoModelSerializer):
 
 
 class BreakMeUpdateSerializer(InfoModelSerializer):
+    status = serializers.CharField(write_only=True)
 
     class Meta:
         model = Break
@@ -40,6 +44,7 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
             'id',
             'break_start',
             'break_end',
+            'status',
         )
         extra_kwargs = {
             'break_start': {'validators': [Time15MinutesValidator()]},
@@ -104,6 +109,52 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
                 )
 
         return attrs
+
+    def validate_status(self, value):
+        if value not in ['break_start', 'break_end']:
+            raise ParseError('Статус должен быть break_start или break_end')
+
+        if self.instance.member.status_id == REPLACEMENT_MEMBER_OFFLINE:
+            raise ParseError(
+                'Невозможно начать обед, пока Ваш статус Офлайн.'
+            )
+
+        if value == 'break_start':
+            now = datetime.datetime.now().astimezone()
+            break_start = datetime.datetime.combine(
+                self.instance.replacement.date, self.instance.break_start
+            )
+            if now + datetime.timedelta(minutes=5) < break_start:
+                raise ParseError(
+                    'Время обеденного перерыва ещё не началось.'
+                )
+            if self.instance.member.time_break_start:
+                raise ParseError(
+                    'Обеденный перерыв уже начался.'
+                )
+        else:
+            if not self.instance.member.time_break_start:
+                raise ParseError(
+                    'Обеденный перерыв ещё не начался.'
+                )
+            if self.instance.member.time_break_end:
+                raise ParseError(
+                    'Обеденный перерыв уже закончился.'
+                )
+        return value
+
+    def update(self, instance, validated_data):
+        status = validated_data.pop('status', None)
+        with transaction.atomic():
+            instance = super().update(instance, validated_data)
+            if status:
+                member = instance.member
+                if status == 'break_start':
+                    member.status_id = REPLACEMENT_MEMBER_BREAK
+                elif status == 'break_end':
+                    member.status_id = REPLACEMENT_MEMBER_ONLINE
+                member.save()
+        return instance
 
 
 class BreakScheduleSerializer(serializers.Serializer):

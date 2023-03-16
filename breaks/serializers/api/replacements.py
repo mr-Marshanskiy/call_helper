@@ -76,12 +76,7 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
 
     def get_personal_stats(self, instance):
         user = get_current_user()
-        member = instance.members_info.filter(
-            member__employee__user=user
-        ).first()
-        if not member:
-            return None
-
+        member = instance.get_member_by_user(user)
         return ReplacementPersonalStatsSerializer(member).data
 
     def get_new_stats(self, instance):

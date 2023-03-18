@@ -46,9 +46,9 @@ class ReplacementListSerializer(InfoModelSerializer):
 
 class ReplacementRetrieveSerializer(InfoModelSerializer):
     group = GroupShortSerializer(source='group.group')
-    stats = ReplacementStatsSerializer(source='*')
+    # stats = ReplacementStatsSerializer(source='*')
 
-    new_stats = serializers.SerializerMethodField()
+    stats = serializers.SerializerMethodField()
     general = ReplacementGeneralSerializer(source='*')
     personal_stats = serializers.SerializerMethodField()
     breaks = ReplacementBreakSerializer(source='*')
@@ -66,7 +66,6 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
             'break_max_duration',
             'min_active',
             'stats',
-            'new_stats',
             'personal_stats',
             'breaks',
             'actions',

@@ -76,7 +76,7 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
     def get_personal_stats(self, instance):
         user = get_current_user()
         member = instance.get_member_by_user(user)
-        return ReplacementPersonalStatsSerializer(member).data
+        return ReplacementPersonalStatsSerializer(member, allow_null=True).data
 
     def get_stats(self, instance):
         result = self.Meta.model.objects.filter(pk=instance.pk).aggregate(

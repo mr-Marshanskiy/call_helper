@@ -1,4 +1,5 @@
 import datetime
+import pdb
 
 from crum import get_current_user
 from django.utils import timezone
@@ -54,6 +55,13 @@ class ReplacementPersonalStatsSerializer(ExtendedModelSerializer):
             'time_offline',
             'time_until_break',
         )
+
+    @property
+    def data(self):
+        data = super().data
+        if 'time_until_break' not in data:
+            data['time_until_break'] = None
+        return data
 
     def get_time_until_break(self, instance):
         if not instance:

@@ -78,7 +78,7 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
         member = instance.get_member_by_user(user)
         return ReplacementPersonalStatsSerializer(member).data
 
-    def get_new_stats(self, instance):
+    def get_stats(self, instance):
         result = self.Meta.model.objects.filter(pk=instance.pk).aggregate(
             members_count=Count('members', distinct=True),
             breaks_count=Count('breaks', distinct=True),

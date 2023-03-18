@@ -56,6 +56,8 @@ class ReplacementPersonalStatsSerializer(ExtendedModelSerializer):
         )
 
     def get_time_until_break(self, instance):
+        if not instance:
+            return None
         break_obj = instance.breaks.filter(replacement=instance.replacement).first()
         if not break_obj:
             return None

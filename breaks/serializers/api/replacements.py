@@ -129,7 +129,7 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
             elif not member.time_break_end:
                 result['break_button'] = 'finish'
 
-            return result
+        return result
 
 
 class ReplacementCreateSerializer(InfoModelSerializer):

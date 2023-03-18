@@ -36,7 +36,7 @@ class BreakMeRetrieveSerializer(InfoModelSerializer):
 
 
 class BreakMeUpdateSerializer(InfoModelSerializer):
-    status = serializers.CharField(write_only=True)
+    status = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Break

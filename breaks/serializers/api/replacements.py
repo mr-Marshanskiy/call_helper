@@ -398,3 +398,5 @@ class ReplacementMemberUpdateSerializer(InfoModelSerializer):
             'id',
             'status',
         )
+
+    #TODO: доделать валидацию статусов

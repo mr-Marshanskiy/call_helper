@@ -1,5 +1,6 @@
 import pdb
 
+from auditlog.registry import auditlog
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
@@ -76,3 +77,6 @@ class Employee(models.Model):
         if self.position_id == OPERATOR_POSITION:
             return True
         return False
+
+
+auditlog.register(Organisation)

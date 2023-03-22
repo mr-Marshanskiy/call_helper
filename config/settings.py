@@ -26,12 +26,15 @@ INSTALLED_APPS = [
 
 # packages
 INSTALLED_APPS += [
+    'auditlog',
     'rest_framework',
     'django_filters',
     'corsheaders',
     'djoser',
     'phonenumber_field',
     'django_generate_series',
+    'debug_toolbar',
+
 ]
 
 # apps
@@ -54,6 +57,7 @@ INSTALLED_APPS += [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,6 +67,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'crum.CurrentRequestUserMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -238,3 +243,22 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 }
+
+################################
+# SENTRY
+################################
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn=env.str('SENTRY_DSN', ''),
+    integrations=[
+        DjangoIntegration(),
+    ],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

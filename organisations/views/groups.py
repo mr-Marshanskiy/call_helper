@@ -50,6 +50,8 @@ class GroupView(LCRUViewSet):
     def get_queryset(self):
         queryset = Group.objects.select_related(
             'manager',
+            'manager__user',
+            'manager__position',
         ).prefetch_related(
             'organisation',
             'organisation__director',

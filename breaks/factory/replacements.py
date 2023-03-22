@@ -15,15 +15,7 @@ class ReplacementFactory:
                 'breaks', distinct=True, filter=Q(breaks__status_id=status),
             )
 
-        qs = self.model.objects.prefetch_related(
-            'group',
-            'group__group__manager',
-            'group__group__manager__user',
-            'group__group__organisation',
-            'members',
-            'members__employee',
-            'members__employee__user',
-        ).annotate(
+        qs = self.model.objects.select_related().annotate(
             all_pax=Count('breaks', distinct=True),
         ).annotate(**annotates_stats)
         return qs

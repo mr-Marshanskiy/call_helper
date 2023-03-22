@@ -55,9 +55,6 @@ class OrganisationView(LCRUViewSet):
     def get_queryset(self):
         queryset = Organisation.objects.select_related(
             'director',
-        ).prefetch_related(
-            'employees',
-            'groups',
         ).annotate(
             pax=Count('employees', distinct=True),
             groups_count=Count('groups', distinct=True),

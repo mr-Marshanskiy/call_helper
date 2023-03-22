@@ -1,4 +1,4 @@
-from django.db.models import Q, Count
+from django.db.models import Count, Q
 
 from breaks import constants
 from breaks.models.replacements import Replacement

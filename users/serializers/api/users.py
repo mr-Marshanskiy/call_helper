@@ -4,8 +4,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from users.serializers.nested.profile import ProfileShortSerializer, \
-    ProfileUpdateSerializer
+from users.serializers.nested.profile import (ProfileShortSerializer,
+                                              ProfileUpdateSerializer)
 
 User = get_user_model()
 

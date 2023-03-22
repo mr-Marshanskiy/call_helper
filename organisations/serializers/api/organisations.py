@@ -4,12 +4,11 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from common.serializers.mixins import ExtendedModelSerializer, \
-    InfoModelSerializer
+from common.serializers.mixins import (ExtendedModelSerializer,
+                                       InfoModelSerializer)
 from organisations.constants import DIRECTOR_POSITION
 from organisations.models.organisations import Organisation
 from users.serializers.nested.users import UserShortSerializer
-
 
 User = get_user_model()
 

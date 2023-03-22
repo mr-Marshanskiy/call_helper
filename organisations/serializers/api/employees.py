@@ -5,8 +5,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
 from common.serializers.mixins import ExtendedModelSerializer
-from organisations.constants import DIRECTOR_POSITION, OPERATOR_POSITION, \
-    MANAGER_POSITION
+from organisations.constants import OPERATOR_POSITION
 from organisations.models.dicts import Position
 from organisations.models.organisations import Employee, Organisation
 from organisations.serializers.nested.dicts import PositionShortSerializer

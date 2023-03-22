@@ -1,11 +1,10 @@
 import datetime
-import pdb
 
 from crum import get_current_user
 from django.utils import timezone
 from rest_framework import serializers
 
-from breaks.models.replacements import ReplacementMember, Replacement
+from breaks.models.replacements import Replacement, ReplacementMember
 from breaks.serializers.internal.breaks import BreakForReplacementSerializer
 from common.serializers.mixins import ExtendedModelSerializer
 from organisations.serializers.nested.groups import GroupShortSerializer

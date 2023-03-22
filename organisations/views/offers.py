@@ -1,9 +1,8 @@
-from django.db.models import Case, When, Q, F
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.filters import OrderingFilter
 
-from common.views.mixins import  LCUViewSet
+from common.views.mixins import LCUViewSet
 from organisations.backends import OwnedByOrganisation
 from organisations.factory.offers import OfferFactory
 from organisations.filters import OfferOrgFilter, OfferUserFilter

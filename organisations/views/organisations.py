@@ -1,11 +1,9 @@
-from crum import get_current_user
-from django.db.models import Count, Case, When
+from django.db.models import Case, Count, When
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view, extend_schema
-from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter, OrderingFilter
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.filters import OrderingFilter, SearchFilter
 
-from common.views.mixins import ListViewSet, LCRUViewSet
+from common.views.mixins import LCRUViewSet, ListViewSet
 from organisations.backends import MyOrganisation
 from organisations.filters import OrganisationFilter
 from organisations.models.organisations import Organisation

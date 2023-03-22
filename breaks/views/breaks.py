@@ -1,15 +1,13 @@
-import pdb
-
 from django.db.models import Q
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from breaks.models.breaks import Break
 from breaks.models.replacements import Replacement
+from breaks.serializers.api import breaks as breaks_s
 from common.services import get_schedule_time_title
 from common.views.mixins import ExtendedCRUAPIView, ListViewSet
-from breaks.serializers.api import breaks as breaks_s
 
 
 @extend_schema_view(

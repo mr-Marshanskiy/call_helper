@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from breaks.constants import BREAK_CREATED_STATUS, BREAK_CREATED_DEFAULT
+from breaks.constants import BREAK_CREATED_DEFAULT, BREAK_CREATED_STATUS
 from breaks.models.dicts import BreakStatus
 
 User = get_user_model()

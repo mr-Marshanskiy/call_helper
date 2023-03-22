@@ -1,5 +1,4 @@
 import datetime
-import pdb
 
 from crum import get_current_user
 from django.contrib.auth import get_user_model
@@ -8,13 +7,13 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from breaks.constants import REPLACEMENT_MEMBER_BREAK, \
-    REPLACEMENT_MEMBER_ONLINE, REPLACEMENT_MEMBER_OFFLINE
+from breaks.constants import (REPLACEMENT_MEMBER_BREAK,
+                              REPLACEMENT_MEMBER_OFFLINE,
+                              REPLACEMENT_MEMBER_ONLINE)
 from breaks.models.breaks import Break
 from breaks.models.replacements import Replacement, ReplacementMember
 from breaks.serializers.nested.replacements import ReplacementShortSerializer
-from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer, \
-    ExtendedModelSerializer
+from common.serializers.mixins import DictMixinSerializer, InfoModelSerializer
 from common.validationrs import Time15MinutesValidator
 
 User = get_user_model()
@@ -194,9 +193,7 @@ class BreakScheduleSerializer(serializers.Serializer):
         return self._convert_to_cell(value, color, span)
 
     def get_post_blank(self, instance):
-        span = self._get_span_count(
-           instance.break_end, instance.replacement.break_end
-        )
+        span = self._get_span_count(instance.break_end, instance.replacement.break_end)
         return self._convert_to_cell(span=span)
 
     def _convert_to_cell(self, value='', color='#fff', span=None):
@@ -213,4 +210,3 @@ class BreakScheduleSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return self.fields['final_line'].to_representation(instance)
-

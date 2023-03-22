@@ -14,4 +14,3 @@ class BreakForReplacementSerializer(ExtendedModelSerializer):
             'break_start': {'format': '%H:%M'},
             'break_end': {'format': '%H:%M'},
         }
-

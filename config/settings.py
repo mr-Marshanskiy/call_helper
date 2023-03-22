@@ -1,7 +1,8 @@
+import os
 from datetime import timedelta
 
 import environ
-import os
+
 root = environ.Path(__file__) - 2
 env = environ.Env()
 
@@ -178,7 +179,7 @@ CSRF_COOKIE_SECURE = False
 ######################
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Call Helper',
-        'DESCRIPTION': 'Call Helper',
+    'DESCRIPTION': 'Call Helper',
     'VERSION': '1.0.0',
 
     'SERVE_PERMISSIONS': [
@@ -247,18 +248,19 @@ SIMPLE_JWT = {
 ################################
 # SENTRY
 ################################
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+if DEBUG:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 
-sentry_sdk.init(
-    dsn=env.str('SENTRY_DSN', ''),
-    integrations=[
-        DjangoIntegration(),
-    ],
-    traces_sample_rate=1.0,
-    send_default_pii=True
-)
+    sentry_sdk.init(
+        dsn=env.str('SENTRY_DSN', ''),
+        integrations=[
+            DjangoIntegration(),
+        ],
+        traces_sample_rate=1.0,
+        send_default_pii=True
+    )
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]

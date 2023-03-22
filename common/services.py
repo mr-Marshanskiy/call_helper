@@ -12,7 +12,7 @@ def get_schedule_time_title(start, end, first_col='', interval=15):
     ]
     while start_datetime < end_datetime:
         result.append(
-            {'value': start_datetime.strftime('%H:%M'), 'color': '#fff',}
+            {'value': start_datetime.strftime('%H:%M'), 'color': '#fff'}
         )
         start_datetime += datetime.timedelta(minutes=interval)
 

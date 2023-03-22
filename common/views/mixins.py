@@ -13,9 +13,9 @@ class ExtendedView:
 
     def get_serializer_class(self):
         assert self.serializer_class or self.multi_serializer_class, (
-                '"%s" should either include `serializer_class`, '
-                '`multi_serializer_class`, attribute, or override the '
-                '`get_serializer_class()` method.' % self.__class__.__name__
+            '"%s" should either include `serializer_class`, '
+            '`multi_serializer_class`, attribute, or override the '
+            '`get_serializer_class()` method.' % self.__class__.__name__
         )
         if not self.multi_serializer_class:
             return self.serializer_class

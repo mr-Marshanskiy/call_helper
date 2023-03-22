@@ -1,9 +1,9 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 
-from common.views.mixins import LCRUDViewSet, ListViewSet
+from common.views.mixins import LCRUDViewSet
 from organisations.backends import OwnedByOrganisation
 from organisations.filters import EmployeeFilter
 from organisations.models.organisations import Employee

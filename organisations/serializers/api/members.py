@@ -3,8 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
 from common.serializers.mixins import ExtendedModelSerializer
-
-from organisations.models.groups import Member, Group
+from organisations.models.groups import Group, Member
 from organisations.models.organisations import Employee
 from organisations.serializers.nested.dicts import PositionShortSerializer
 from organisations.serializers.nested.employees import EmployeeShortSerializer

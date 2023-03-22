@@ -1,10 +1,10 @@
 import django_filters
-from django.db.models import Q, F
+from django.db.models import F, Q
 
 from organisations.constants import DIRECTOR_POSITION, MANAGER_POSITION
 from organisations.models.groups import Group
 from organisations.models.offers import Offer
-from organisations.models.organisations import Organisation, Employee
+from organisations.models.organisations import Employee, Organisation
 
 
 class OrganisationFilter(django_filters.FilterSet):

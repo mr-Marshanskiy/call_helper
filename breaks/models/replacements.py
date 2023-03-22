@@ -1,17 +1,15 @@
 from datetime import datetime, timedelta
-import pdb
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import TimeField, OuterRef, Count, Q, F, Subquery, \
-    IntegerField, ExpressionWrapper, DateTimeField
-from django.db.models.functions import Coalesce
+from django.db.models import (Count, DateTimeField, ExpressionWrapper, F,
+                              OuterRef, Q, Subquery)
 from django.utils import timezone
 from django_generate_series.models import generate_series
 
-from breaks import constants
-from breaks.constants import REPLACEMENT_MEMBER_ONLINE, REPLACEMENT_MEMBER_BUSY, \
-    REPLACEMENT_MEMBER_BREAK, REPLACEMENT_MEMBER_OFFLINE
+from breaks.constants import (REPLACEMENT_MEMBER_BREAK,
+                              REPLACEMENT_MEMBER_OFFLINE,
+                              REPLACEMENT_MEMBER_ONLINE)
 from breaks.models.breaks import Break
 from common.models.mixins import InfoMixin
 
@@ -37,7 +35,7 @@ class GroupInfo(models.Model):
         verbose_name_plural = 'Параметры обеденных перерывов'
 
     def __str__(self):
-        return f'Break Info'
+        return 'Break Info'
 
 
 class Replacement(InfoMixin):

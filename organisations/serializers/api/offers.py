@@ -1,20 +1,17 @@
-import pdb
-
 from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from common.serializers.mixins import ExtendedModelSerializer, \
-    InfoModelSerializer
+from common.serializers.mixins import (ExtendedModelSerializer,
+                                       InfoModelSerializer)
 from organisations.constants import OPERATOR_POSITION
 from organisations.models.offers import Offer
 from organisations.models.organisations import Organisation
 from organisations.serializers.nested.organisations import \
     OrganisationShortSerializer
 from users.serializers.nested.users import UserShortSerializer
-
 
 User = get_user_model()
 
@@ -171,13 +168,13 @@ class OfferUserToOrgCreateSerializer(ExtendedModelSerializer):
             user=user,
         ).exists()
         if offer_exist:
-            raise ParseError(f'Заявка в эту организацию была отправлена ранее.')
+            raise ParseError('Заявка в эту организацию была отправлена ранее.')
 
         # check user in org already
         already_in_org = organisation.employees_info.filter(user=user).exists()
         if already_in_org:
             raise ParseError(
-                f'Вы уже являетесь сотрудником организации.'
+                'Вы уже являетесь сотрудником организации.'
             )
         return attrs
 

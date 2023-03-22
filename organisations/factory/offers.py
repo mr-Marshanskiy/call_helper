@@ -1,5 +1,5 @@
 from crum import get_current_user
-from django.db.models import Case, When, Q, F, Value
+from django.db.models import Case, F, Q, Value, When
 
 from organisations.models.offers import Offer
 

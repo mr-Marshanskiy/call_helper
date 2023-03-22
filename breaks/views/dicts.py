@@ -1,7 +1,7 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
+from breaks.models.dicts import BreakStatus, ReplacementStatus
 from common.views.mixins import DictListMixin
-from breaks.models.dicts import ReplacementStatus, BreakStatus
 
 
 @extend_schema_view(

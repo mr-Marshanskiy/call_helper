@@ -1,6 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from users.models.profile import Profile
@@ -40,4 +39,3 @@ class UserAdmin(UserAdmin):
     readonly_fields = ('last_login',)
 
     inlines = (ProfileAdmin,)
-

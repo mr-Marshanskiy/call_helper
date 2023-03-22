@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
-from breaks.models.replacements import GroupInfo, Replacement, ReplacementMember
-from common.serializers.mixins import ExtendedModelSerializer, \
-    InfoModelSerializer, DictMixinSerializer
+from breaks.models.replacements import (GroupInfo, Replacement,
+                                        ReplacementMember)
+from common.serializers.mixins import (DictMixinSerializer,
+                                       ExtendedModelSerializer,
+                                       InfoModelSerializer)
 
 
 class BreakSettingsSerializer(ExtendedModelSerializer):

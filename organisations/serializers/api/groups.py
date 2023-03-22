@@ -6,8 +6,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
 from breaks.serializers.nested.replacements import BreakSettingsSerializer
-from common.serializers.mixins import ExtendedModelSerializer, \
-    InfoModelSerializer
+from common.serializers.mixins import (ExtendedModelSerializer,
+                                       InfoModelSerializer)
 from organisations.models.groups import Group
 from organisations.models.organisations import Organisation
 from organisations.serializers.nested.employees import EmployeeShortSerializer

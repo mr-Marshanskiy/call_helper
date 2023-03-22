@@ -14,4 +14,3 @@ class BasePagination(PageNumberPagination):
             'pages': self.page.paginator.num_pages,
             'results': data
         })
-

@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.decorators import action
 
 from common.views.mixins import LCDViewSet

@@ -1,5 +1,4 @@
 import datetime
-import pdb
 from datetime import timedelta
 
 from crum import get_current_user
@@ -10,17 +9,19 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from breaks.constants import REPLACEMENT_MEMBER_ONLINE, \
-    REPLACEMENT_MEMBER_OFFLINE, REPLACEMENT_MEMBER_BUSY, \
-    REPLACEMENT_MEMBER_BREAK
-from breaks.models.replacements import Replacement, GroupInfo, ReplacementMember
-from breaks.serializers.internal.replacements import ReplacementStatsSerializer, \
-    ReplacementGeneralSerializer, ReplacementPersonalStatsSerializer, \
-    ReplacementBreakSerializer
+from breaks.constants import (REPLACEMENT_MEMBER_BREAK,
+                              REPLACEMENT_MEMBER_BUSY,
+                              REPLACEMENT_MEMBER_OFFLINE,
+                              REPLACEMENT_MEMBER_ONLINE)
+from breaks.models.replacements import (GroupInfo, Replacement,
+                                        ReplacementMember)
+from breaks.serializers.internal.replacements import (
+    ReplacementBreakSerializer, ReplacementGeneralSerializer,
+    ReplacementPersonalStatsSerializer, ReplacementStatsSerializer)
 from breaks.serializers.nested.replacements import \
     ReplacementMemberShortSerializer
-from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer
-from organisations.models.groups import Member, Group
+from common.serializers.mixins import DictMixinSerializer, InfoModelSerializer
+from organisations.models.groups import Group, Member
 from organisations.serializers.nested.groups import GroupShortSerializer
 
 User = get_user_model()
@@ -133,7 +134,7 @@ class ReplacementRetrieveSerializer(InfoModelSerializer):
 
 
 class ReplacementCreateSerializer(InfoModelSerializer):
-    group =serializers.PrimaryKeyRelatedField(
+    group = serializers.PrimaryKeyRelatedField(
         queryset=Group.objects.all()
     )
     members = serializers.PrimaryKeyRelatedField(
@@ -312,20 +313,20 @@ class ReplacementUpdateSerializer(InfoModelSerializer):
             if remember_data:
                 defaults = {
                     'break_start': (
-                            validated_data.get('break_start')
-                            or self.instance.break_start
+                        validated_data.get('break_start')
+                        or self.instance.break_start
                     ),
                     'break_end': (
-                            validated_data.get('break_end')
-                            or self.instance.break_end
+                        validated_data.get('break_end')
+                        or self.instance.break_end
                     ),
                     'break_max_duration': (
-                            validated_data.get('break_max_duration')
-                            or self.instance.break_max_duration
+                        validated_data.get('break_max_duration')
+                        or self.instance.break_max_duration
                     ),
                     'min_active': (
-                            validated_data.get('min_active')
-                            or self.instance.min_active
+                        validated_data.get('min_active')
+                        or self.instance.min_active
                     ),
                 }
                 group = instance.group
@@ -398,4 +399,4 @@ class ReplacementMemberUpdateSerializer(InfoModelSerializer):
             'status',
         )
 
-    #TODO: доделать валидацию статусов
+    # TODO: доделать валидацию статусов

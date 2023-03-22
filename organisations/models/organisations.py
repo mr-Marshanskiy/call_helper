@@ -1,13 +1,11 @@
-import pdb
-
 from auditlog.registry import auditlog
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
 from common.models.mixins import InfoMixin
-from organisations.constants import DIRECTOR_POSITION, MANAGER_POSITION, \
-    OPERATOR_POSITION
+from organisations.constants import (DIRECTOR_POSITION, MANAGER_POSITION,
+                                     OPERATOR_POSITION)
 
 User = get_user_model()
 

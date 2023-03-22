@@ -1,15 +1,15 @@
 from crum import get_current_user
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import get_object_or_404
 
 from breaks.factory.replacements import ReplacementFactory
 from breaks.filters import ReplacementFilter
 from breaks.models.replacements import Replacement, ReplacementMember
-from common.views.mixins import LCRUViewSet, ExtendedRetrieveUpdateAPIView
 from breaks.serializers.api import replacements as replacements_s
+from common.views.mixins import ExtendedRetrieveUpdateAPIView, LCRUViewSet
 
 
 @extend_schema_view(

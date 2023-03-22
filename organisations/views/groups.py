@@ -1,14 +1,14 @@
-from django.db.models import Count, Case, When, Q
+from django.db.models import Case, Count, Q, When
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 from common.views.mixins import LCRUViewSet
-from organisations.backends import MyOrganisation, MyGroup
+from organisations.backends import MyGroup
 from organisations.filters import GroupFilter
 from organisations.models.groups import Group
-from organisations.permissions import IsColleagues, IsMyGroup
+from organisations.permissions import IsMyGroup
 from organisations.serializers.api import groups as groups_s
 
 
@@ -60,8 +60,8 @@ class GroupView(LCRUViewSet):
             pax=Count('members', distinct=True),
             can_manage=Case(
                 When(
-                    Q(manager__user=self.request.user) |
-                    Q(organisation__director=self.request.user),
+                    Q(manager__user=self.request.user)
+                    | Q(organisation__director=self.request.user),
                     then=True
                 ),
                 default=False,

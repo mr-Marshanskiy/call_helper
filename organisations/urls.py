@@ -1,8 +1,8 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from organisations.views import dicts, organisations, employees, groups, offers, \
-    members
+from organisations.views import (dicts, employees, groups, members, offers,
+                                 organisations)
 
 router = DefaultRouter()
 
@@ -18,4 +18,3 @@ router.register(r'', organisations.OrganisationView, 'organisations')
 urlpatterns = [
     path('organisations/', include(router.urls)),
 ]
-

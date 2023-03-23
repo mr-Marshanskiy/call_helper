@@ -245,22 +245,22 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 }
 
-################################
-# SENTRY
-################################
-if DEBUG:
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(
-        dsn=env.str('SENTRY_DSN', ''),
-        integrations=[
-            DjangoIntegration(),
-        ],
-        traces_sample_rate=1.0,
-        send_default_pii=True
-    )
-
-    INTERNAL_IPS = [
-        '127.0.0.1',
-    ]
+# ################################
+# # SENTRY
+# ################################
+# if DEBUG:
+#     import sentry_sdk
+#     from sentry_sdk.integrations.django import DjangoIntegration
+#
+#     sentry_sdk.init(
+#         dsn=env.str('SENTRY_DSN', ''),
+#         integrations=[
+#             DjangoIntegration(),
+#         ],
+#         traces_sample_rate=1.0,
+#         send_default_pii=True
+#     )
+#
+#     INTERNAL_IPS = [
+#         '127.0.0.1',
+#     ]

@@ -1,0 +1,25 @@
+version: '3.10'
+
+services:
+  web:
+    build: ./
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+      image: postgres:14-alpine
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=call_helper
+        - POSTGRES_PASSWORD=call_helper
+        - POSTGRES_DB=call_helper
+
+volumes:
+  postgres_data:

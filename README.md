@@ -48,5 +48,19 @@
 
 ### Обеденные перерывы
 
-> Test
-> 
+
+
+# Установка проекта в Docker
+1. Создание образа и запуск
+```
+docker-compose up -d 
+```
+2. Инициализация проекта
+```
+docker-compose exec web make initial
+```
+3. Добавление суперюзера
+```
+docker-compose exec web make admin
+```
+4. Проверить

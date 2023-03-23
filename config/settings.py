@@ -27,14 +27,14 @@ INSTALLED_APPS = [
 
 # packages
 INSTALLED_APPS += [
-    'corsheaders',
     'auditlog',
     'rest_framework',
     'django_filters',
+    'corsheaders',
     'djoser',
     'phonenumber_field',
     'django_generate_series',
-    # 'debug_toolbar',
+    'debug_toolbar',
 
 ]
 
@@ -58,8 +58,7 @@ INSTALLED_APPS += [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'crum.CurrentRequestUserMiddleware',
     'auditlog.middleware.AuditlogMiddleware',
 ]
@@ -130,20 +130,20 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'common.pagination.BasePagination',
 }
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator иууллвщв',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator иууллвщв',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -245,22 +245,22 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
 }
 
-# ################################
-# # SENTRY
-# ################################
-# if DEBUG:
-#     import sentry_sdk
-#     from sentry_sdk.integrations.django import DjangoIntegration
-#
-#     sentry_sdk.init(
-#         dsn=env.str('SENTRY_DSN', ''),
-#         integrations=[
-#             DjangoIntegration(),
-#         ],
-#         traces_sample_rate=1.0,
-#         send_default_pii=True
-#     )
-#
-#     INTERNAL_IPS = [
-#         '127.0.0.1',
-#     ]
+################################
+# SENTRY
+################################
+if DEBUG:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=env.str('SENTRY_DSN', ''),
+        integrations=[
+            DjangoIntegration(),
+        ],
+        traces_sample_rate=1.0,
+        send_default_pii=True
+    )
+
+    INTERNAL_IPS = [
+        '127.0.0.1',
+    ]

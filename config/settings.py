@@ -34,7 +34,7 @@ INSTALLED_APPS += [
     'djoser',
     'phonenumber_field',
     'django_generate_series',
-    'debug_toolbar',
+    # 'debug_toolbar',
 
 ]
 
@@ -59,7 +59,7 @@ INSTALLED_APPS += [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -165,13 +165,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
-# ######################
-# # CORS HEADERS
-# ######################
-# CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOW_HEADERS = ['*']
-# CSRF_COOKIE_SECURE = False
+######################
+# CORS HEADERS
+######################
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
+CSRF_COOKIE_SECURE = False
 
 
 ######################

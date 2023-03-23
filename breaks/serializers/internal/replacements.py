@@ -10,15 +10,6 @@ from common.serializers.mixins import ExtendedModelSerializer
 from organisations.serializers.nested.groups import GroupShortSerializer
 
 
-class ReplacementStatsSerializer(serializers.Serializer):
-    all_pax = serializers.IntegerField()
-    created_pax = serializers.IntegerField()
-    confirmed_pax = serializers.IntegerField()
-    on_break_pax = serializers.IntegerField()
-    finished_pax = serializers.IntegerField()
-    cancelled_pax = serializers.IntegerField()
-
-
 class ReplacementGeneralSerializer(ExtendedModelSerializer):
     group = GroupShortSerializer(source='group.group')
     break_start = serializers.TimeField(format='%H:%M')

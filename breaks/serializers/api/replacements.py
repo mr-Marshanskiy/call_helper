@@ -17,7 +17,7 @@ from breaks.models.replacements import (GroupInfo, Replacement,
                                         ReplacementMember)
 from breaks.serializers.internal.replacements import (
     ReplacementBreakSerializer, ReplacementGeneralSerializer,
-    ReplacementPersonalStatsSerializer, ReplacementStatsSerializer)
+    ReplacementPersonalStatsSerializer)
 from breaks.serializers.nested.replacements import \
     ReplacementMemberShortSerializer
 from common.serializers.mixins import DictMixinSerializer, InfoModelSerializer
@@ -29,7 +29,6 @@ User = get_user_model()
 
 class ReplacementListSerializer(InfoModelSerializer):
     group = GroupShortSerializer(source='group.group')
-    stats = ReplacementStatsSerializer(source='*')
 
     class Meta:
         model = Replacement
@@ -41,13 +40,10 @@ class ReplacementListSerializer(InfoModelSerializer):
             'break_end',
             'break_max_duration',
             'min_active',
-            'stats',
         )
 
 
 class ReplacementRetrieveSerializer(InfoModelSerializer):
-    group = GroupShortSerializer(source='group.group')
-    # stats = ReplacementStatsSerializer(source='*')
 
     stats = serializers.SerializerMethodField()
     general = ReplacementGeneralSerializer(source='*')

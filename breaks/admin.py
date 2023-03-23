@@ -30,13 +30,6 @@ class ReplacementStatusAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(dicts.BreakStatus)
-class BreakStatusAdmin(admin.ModelAdmin):
-    list_display = (
-        'code', 'name', 'sort', 'is_active',
-    )
-
-
 @admin.register(replacements.Replacement)
 class ReplacementAdmin(admin.ModelAdmin):
     list_display = (
@@ -53,9 +46,8 @@ class ReplacementAdmin(admin.ModelAdmin):
 @admin.register(breaks.Break)
 class BreakAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'replacement_link', 'break_start', 'break_end', 'status',
+        'id', 'replacement_link', 'break_start', 'break_end',
     )
-    list_filter = ('status',)
     empty_value_display = 'Unknown'
 
     def replacement_link(self, obj):

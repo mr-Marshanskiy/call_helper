@@ -399,4 +399,24 @@ class ReplacementMemberUpdateSerializer(InfoModelSerializer):
             'status',
         )
 
-    # TODO: доделать валидацию статусов
+    def validate_status(self, value):
+        now = datetime.datetime.now().astimezone().date()
+        if self.instance.replacement.date != now:
+            raise ParseError(
+                'Смена ещё не началась или уже завершилась.'
+            )
+
+        value_code = value.code
+        instance_value_code = self.instance.status_id
+        if value_code == REPLACEMENT_MEMBER_ONLINE:
+            if self.instance.time_offline:
+                raise ParseError(
+                    'Вы уже завершили смену.'
+                )
+        elif value == REPLACEMENT_MEMBER_OFFLINE:
+            if instance_value_code != REPLACEMENT_MEMBER_ONLINE:
+                raise ParseError(
+                    'Невозможно завершить смену. '
+                    'Проверьте все незавершенные активности смены.'
+                )
+        return value

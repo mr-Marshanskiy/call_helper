@@ -13,14 +13,13 @@ from breaks.constants import (REPLACEMENT_MEMBER_BREAK,
 from breaks.models.breaks import Break
 from breaks.models.replacements import Replacement, ReplacementMember
 from breaks.serializers.nested.replacements import ReplacementShortSerializer
-from common.serializers.mixins import DictMixinSerializer, InfoModelSerializer
+from common.serializers.mixins import InfoModelSerializer
 from common.validationrs import Time15MinutesValidator
 
 User = get_user_model()
 
 
 class BreakMeRetrieveSerializer(InfoModelSerializer):
-    status = DictMixinSerializer()
     replacement = ReplacementShortSerializer()
 
     class Meta:
@@ -30,12 +29,10 @@ class BreakMeRetrieveSerializer(InfoModelSerializer):
             'replacement',
             'break_start',
             'break_end',
-            'status',
         )
 
 
 class BreakMeUpdateSerializer(InfoModelSerializer):
-    status = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Break
@@ -43,7 +40,6 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
             'id',
             'break_start',
             'break_end',
-            'status',
         )
         extra_kwargs = {
             'break_start': {'validators': [Time15MinutesValidator()]},

@@ -1,4 +1,5 @@
-# Сервис для организации работы сотрудников Call центров
+# Call Helper
+> Сервис для организации работы сотрудников Call центров
 
 ## Ссылки:
 - Backend: [api.call-helper.ru/api]()
@@ -7,6 +8,21 @@
   - FreePassView2023
 - Frontend: [call-helper.ru]()
 - Fronted dev: [dev.call-helper.ru]()
+
+# Установка проекта в Docker
+1. Создание образа и запуск
+```
+docker-compose up -d 
+```
+2. Инициализация проекта
+```
+docker-compose exec web make initial
+```
+3. Добавление суперюзера
+```
+docker-compose exec web python manage.py createsuperuser
+```
+4. Проверить
 
 ## Основной функционал
 ### Пользователи
@@ -48,19 +64,3 @@
 
 ### Обеденные перерывы
 
-
-
-# Установка проекта в Docker
-1. Создание образа и запуск
-```
-docker-compose up -d 
-```
-2. Инициализация проекта
-```
-docker-compose exec web make initial
-```
-3. Добавление суперюзера
-```
-docker-compose exec web make admin
-```
-4. Проверить

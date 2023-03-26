@@ -68,40 +68,41 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
         if not member:
             raise ParseError('У вас нет доступа к текущей смене.')
 
-        if attrs['break_start'] < replacement.break_start:
-            raise ParseError(
-                'Время начала не должно быть меньше времени, указанного в смене.'
-            )
-        if attrs['break_end'] > replacement.break_end:
-            raise ParseError(
-                'Время окончания не должно быть больше времени, указанного в смене.'
-            )
-        if attrs['break_start'] >= attrs['break_end']:
-            raise ParseError(
-                'Время начала не должно быть больше времени окончания.'
-            )
-
-        max_duration = datetime.timedelta(minutes=replacement.break_max_duration)
-        break_start = datetime.datetime.combine(datetime.date.today(), attrs['break_start'])
-        break_end = datetime.datetime.combine(datetime.date.today(), attrs['break_end'])
-        if break_start + max_duration < break_end:
-            raise ParseError(
-                'Продолжительность обеда превышает максимальное установленное значение.'
-            )
-
-        free_breaks = replacement.free_breaks_available(
-            attrs['break_start'], attrs['break_end'], instance_id
-        )
-        if free_breaks <= replacement.min_active:
-            raise ParseError('Нет свободных мест на выбранный интервал.')
-        attrs['replacement'] = replacement
-        attrs['member'] = member
-
-        if not instance_id:
-            if replacement.breaks.filter(member=member).exists():
+        if 'break_start' in attrs and 'break_end' in attrs:
+            if attrs['break_start'] < replacement.break_start:
                 raise ParseError(
-                    'Вы уже зарезервировали обеденный перерыв.'
+                    'Время начала не должно быть меньше времени, указанного в смене.'
                 )
+            if attrs['break_end'] > replacement.break_end:
+                raise ParseError(
+                    'Время окончания не должно быть больше времени, указанного в смене.'
+                )
+            if attrs['break_start'] >= attrs['break_end']:
+                raise ParseError(
+                    'Время начала не должно быть больше времени окончания.'
+                )
+
+            max_duration = datetime.timedelta(minutes=replacement.break_max_duration)
+            break_start = datetime.datetime.combine(datetime.date.today(), attrs['break_start'])
+            break_end = datetime.datetime.combine(datetime.date.today(), attrs['break_end'])
+            if break_start + max_duration < break_end:
+                raise ParseError(
+                    'Продолжительность обеда превышает максимальное установленное значение.'
+                )
+
+            free_breaks = replacement.free_breaks_available(
+                attrs['break_start'], attrs['break_end'], instance_id
+            )
+            if free_breaks <= replacement.min_active:
+                raise ParseError('Нет свободных мест на выбранный интервал.')
+            attrs['replacement'] = replacement
+            attrs['member'] = member
+
+            if not instance_id:
+                if replacement.breaks.filter(member=member).exists():
+                    raise ParseError(
+                        'Вы уже зарезервировали обеденный перерыв.'
+                    )
 
         return attrs
 

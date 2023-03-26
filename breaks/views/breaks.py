@@ -13,7 +13,7 @@ from common.views.mixins import ExtendedCRUAPIView, ListViewSet
 @extend_schema_view(
     get=extend_schema(summary='Деталка обеда', tags=['Обеды: Обеды пользователя']),
     post=extend_schema(summary='Резерв обеда', tags=['Обеды: Обеды пользователя']),
-    put=extend_schema(summary='Измемение резерва обеда', tags=['Обеды: Обеды пользователя']),
+    patch=extend_schema(summary='Измемение резерва обеда', tags=['Обеды: Обеды пользователя']),
 )
 class BreakMeView(ExtendedCRUAPIView):
     # permission_classes = [IsNotCorporate]
@@ -22,7 +22,7 @@ class BreakMeView(ExtendedCRUAPIView):
     multi_serializer_class = {
         'GET': breaks_s.BreakMeRetrieveSerializer,
     }
-    http_method_names = ('get', 'post', 'put')
+    http_method_names = ('get', 'post', 'patch')
 
     def get_object(self):
         user = self.request.user

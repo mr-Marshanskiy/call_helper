@@ -185,8 +185,7 @@ class BreakScheduleSerializer(serializers.Serializer):
         break_start = instance.break_start.strftime('%H:%M')
         break_end = instance.break_end.strftime('%H:%M')
         value = f'{break_start} - {break_end}'
-        color = instance.status.color
-        return self._convert_to_cell(value, color, span)
+        return self._convert_to_cell(value, span=span)
 
     def get_post_blank(self, instance):
         span = self._get_span_count(instance.break_end, instance.replacement.break_end)

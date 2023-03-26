@@ -121,7 +121,7 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
             now = datetime.datetime.now().astimezone()
             break_start = datetime.datetime.combine(
                 self.instance.replacement.date, self.instance.break_start
-            )
+            ).astimezone()
             if now + datetime.timedelta(minutes=5) < break_start:
                 raise ParseError(
                     'Время обеденного перерыва ещё не началось.'

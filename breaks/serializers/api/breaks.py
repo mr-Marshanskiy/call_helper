@@ -33,6 +33,7 @@ class BreakMeRetrieveSerializer(InfoModelSerializer):
 
 
 class BreakMeUpdateSerializer(InfoModelSerializer):
+    status = serializers.CharField(required=False, allow_null=True)
 
     class Meta:
         model = Break
@@ -40,6 +41,7 @@ class BreakMeUpdateSerializer(InfoModelSerializer):
             'id',
             'break_start',
             'break_end',
+            'status',
         )
         extra_kwargs = {
             'break_start': {'validators': [Time15MinutesValidator()]},

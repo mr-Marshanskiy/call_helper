@@ -1,4 +1,3 @@
-from crum import get_current_user
 from django.db.models import Q
 from rest_framework.filters import BaseFilterBackend
 
@@ -6,21 +5,13 @@ from rest_framework.filters import BaseFilterBackend
 class OwnedByOrganisation(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         org_id = request.parser_context['kwargs'].get('pk')
-        user = get_current_user()
-        return queryset.filter(
-            organisation_id=org_id,
-            organisation__employees=user,
-        )
+        return queryset.filter(organisation_id=org_id)
 
 
 class OwnedByGroup(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         group_id = request.parser_context['kwargs'].get('pk')
-        user = get_current_user()
-        return queryset.filter(
-            group_id=group_id,
-            group__organisation__employees=user,
-        )
+        return queryset.filter(group_id=group_id)
 
 
 class MyOrganisation(BaseFilterBackend):

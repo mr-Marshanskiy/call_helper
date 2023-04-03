@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from common.views.mixins import LCDViewSet
 from organisations.backends import OwnedByGroup
 from organisations.models.groups import Member
-from organisations.permissions import IsColleagues
+from organisations.permissions import IsMembers
 from organisations.serializers.api import members as members_s
 
 
@@ -15,7 +15,7 @@ from organisations.serializers.api import members as members_s
     search=extend_schema(filters=True, summary='Список участников группы Search', tags=['Словари']),
 )
 class MemberView(LCDViewSet):
-    permission_classes = [IsColleagues]
+    permission_classes = [IsMembers]
 
     queryset = Member.objects.all()
     serializer_class = members_s.MemberListSerializer

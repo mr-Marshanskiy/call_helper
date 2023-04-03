@@ -2,6 +2,11 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 
 class IsMyOrganisation(IsAuthenticated):
+    def has_permission(self, request, view):
+        org_id = request.parser_context['kwargs'].get('pk')
+        user = request.user
+        return user.organisations_info.filter(organisation_id=org_id).exists()
+
     def has_object_permission(self, request, view, obj):
         if obj.director == request.user:
             return True
@@ -12,7 +17,7 @@ class IsMyOrganisation(IsAuthenticated):
         return False
 
 
-class IsColleagues(IsAuthenticated):
+class IsColleagues(IsMyOrganisation):
     def has_object_permission(self, request, view, obj):
         if obj.organisation.director == request.user:
             return True
@@ -22,7 +27,7 @@ class IsColleagues(IsAuthenticated):
         return False
 
 
-class IsMembers(IsAuthenticated):
+class IsMembers(IsMyOrganisation):
     def has_object_permission(self, request, view, obj):
         if (
             obj.group.organisation.director == request.user

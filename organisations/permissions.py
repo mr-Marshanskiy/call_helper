@@ -3,9 +3,12 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 
 class IsMyOrganisation(IsAuthenticated):
     def has_permission(self, request, view):
-        org_id = request.parser_context['kwargs'].get('pk')
-        user = request.user
-        return user.organisations_info.filter(organisation_id=org_id).exists()
+        try:
+            org_id = request.parser_context['kwargs'].get('pk')
+            user = request.user
+            return user.organisations_info.filter(organisation_id=org_id).exists()
+        except:
+            return True
 
     def has_object_permission(self, request, view, obj):
         if obj.director == request.user:

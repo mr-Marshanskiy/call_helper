@@ -299,18 +299,7 @@ LOGGING = {
             'fqdn': False, # Fully qualified domain name. Default value: false.
             'tags': ['django.request'], # list of tags. Default: None.
         },
-        # 'logstash': {
-        #     'class': 'logstash_async.handler.AsynchronousLogstashHandler',
-        #     'host': os.getenv('LOGSTASH_HOST', 'localhost'),
-        #     'port': int(os.getenv('LOGSTASH_PORT', 5000)),
-        #     # 'ssl': os.getenv('LOGSTASH_SSL', 'false').lower() == 'true',
-        #     # 'verify_ssl': os.getenv('LOGSTASH_VERIFY_SSL', 'false').lower() == 'true',
-        #     # 'ca_certs': os.getenv('LOGSTASH_CA_CERTS', None),
-        #     # 'keyfile': os.getenv('LOGSTASH_KEYFILE', None),
-        #     # 'certfile': os.getenv('LOGSTASH_CERTFILE', None),
-        #     'database_path': os.path.join(BASE_DIR, 'logstash.db'),
-        #     'formatter': 'logstash',
-        # },
+
     },
     'loggers': {
         'django.request': {

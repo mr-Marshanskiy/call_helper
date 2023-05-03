@@ -35,7 +35,6 @@ INSTALLED_APPS += [
     'phonenumber_field',
     'django_generate_series',
     'debug_toolbar',
-
 ]
 
 # apps
@@ -69,6 +68,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'crum.CurrentRequestUserMiddleware',
     'auditlog.middleware.AuditlogMiddleware',
+    'request_logging.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -264,3 +264,68 @@ if DEBUG:
     INTERNAL_IPS = [
         '127.0.0.1',
     ]
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'logstash': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+        },
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(levelname)s %(message)s',
+            'json_indent': None,
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'logstash': {
+            'level': 'INFO',
+            # 'formatter': 'json',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': 'localhost',
+            'port': 50000, # Default value: 5959
+            'version': 1, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+            'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
+            'fqdn': False, # Fully qualified domain name. Default value: false.
+            'tags': ['django.request'], # list of tags. Default: None.
+        },
+        # 'logstash': {
+        #     'class': 'logstash_async.handler.AsynchronousLogstashHandler',
+        #     'host': os.getenv('LOGSTASH_HOST', 'localhost'),
+        #     'port': int(os.getenv('LOGSTASH_PORT', 5000)),
+        #     # 'ssl': os.getenv('LOGSTASH_SSL', 'false').lower() == 'true',
+        #     # 'verify_ssl': os.getenv('LOGSTASH_VERIFY_SSL', 'false').lower() == 'true',
+        #     # 'ca_certs': os.getenv('LOGSTASH_CA_CERTS', None),
+        #     # 'keyfile': os.getenv('LOGSTASH_KEYFILE', None),
+        #     # 'certfile': os.getenv('LOGSTASH_CERTFILE', None),
+        #     'database_path': os.path.join(BASE_DIR, 'logstash.db'),
+        #     'formatter': 'logstash',
+        # },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console', 'logstash'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'request_logging': {
+            'handlers': ['console', 'logstash'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}

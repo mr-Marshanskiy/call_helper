@@ -295,7 +295,7 @@ LOGGING = {
             'host': 'localhost',
             'port': 50000, # Default value: 5959
             'version': 1,
-            'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
+            'message_type': 'django',
             'fqdn': False, # Fully qualified domain name. Default value: false.
             'tags': ['django.request'], # list of tags. Default: None.
         },

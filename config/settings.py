@@ -294,7 +294,7 @@ LOGGING = {
             'class': 'logstash.TCPLogstashHandler',
             'host': 'localhost',
             'port': 50000, # Default value: 5959
-            'version': 1, # Version of logstash event schema. Default value: 0 (for backward compatibility of the library)
+            'version': 1,
             'message_type': 'django',  # 'type' field in logstash message. Default value: 'logstash'.
             'fqdn': False, # Fully qualified domain name. Default value: false.
             'tags': ['django.request'], # list of tags. Default: None.

@@ -1,13 +1,5 @@
 # Сервис для организации работы сотрудников Call центров
 
-## Ссылки:
-- Backend: [api.call-helper.ru/api]()
-- Backend dev: [api.dev.call-helper.ru/api]()
-  - free_viewer@mail.ru
-  - FreePassView2023
-- Frontend: [call-helper.ru]()
-- Fronted dev: [dev.call-helper.ru]()
-
 ## Основной функционал
 ### Пользователи
 **Возможности:**
